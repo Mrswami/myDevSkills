@@ -1,15 +1,13 @@
-import { Component, ElementRef, ViewChild, AfterViewInit, OnDestroy, ChangeDetectionStrategy, inject } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewInit, OnDestroy, ChangeDetectionStrategy, inject, effect } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { CommonModule } from '@angular/common';
-import { SkillTreeService, SkillNode } from '../../core/state/skill-tree.service';
+import { SkillTreeService, SkillData, SkillNode, ViewMode } from '../../core/state/skill-tree.service';
 import { TreeNodeComponent } from '../tree-node/tree-node';
-import { fromEvent, Subscription, switchMap, takeUntil, map } from 'rxjs';
 import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-skill-tree-container',
   standalone: true,
-  imports: [CommonModule, TreeNodeComponent],
+  imports: [TreeNodeComponent],
   templateUrl: './skill-tree-container.html',
   styleUrls: ['./skill-tree-container.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,73 +26,150 @@ import { trigger, transition, style, animate } from '@angular/animations';
 export class SkillTreeContainerComponent implements AfterViewInit, OnDestroy {
   public skillService = inject(SkillTreeService);
   private http = inject(HttpClient);
-  private sub = new Subscription();
 
   @ViewChild('mapContainer', { static: true }) mapContainer!: ElementRef<HTMLDivElement>;
 
+  private pointers = new Map<number, { x: number; y: number }>();
+  private lastPinch = 0;
+  private moved = false;
+  private cleanup: Array<() => void> = [];
+
   constructor() {
-    this.http.get<{nodes: SkillNode[]}>('skills.json').subscribe(data => {
-      this.skillService.loadNodes(data.nodes);
+    this.http.get<SkillData>('skills.json').subscribe(data => {
+      this.skillService.loadData(data);
+      // Wait for the view to measure before framing the whole map.
+      requestAnimationFrame(() => this.fit());
+    });
+
+    // Pan to a node when a search narrows to a single skill.
+    effect(() => {
+      const q = this.skillService.search().trim();
+      const vis = this.skillService.visibleIds();
+      if (q && vis && vis.size === 1) {
+        this.skillService.focusNode([...vis][0], window.innerWidth);
+      }
     });
   }
 
   ngAfterViewInit() {
-    this.setupPanZoom();
-  }
-
-  private setupPanZoom() {
     const el = this.mapContainer.nativeElement;
+    const on = <K extends keyof HTMLElementEventMap>(type: K, fn: (e: HTMLElementEventMap[K]) => void, opts?: AddEventListenerOptions) => {
+      el.addEventListener(type, fn as EventListener, opts);
+      this.cleanup.push(() => el.removeEventListener(type, fn as EventListener));
+    };
 
-    const mousedown$ = fromEvent<MouseEvent>(el, 'mousedown');
-    const mousemove$ = fromEvent<MouseEvent>(document, 'mousemove');
-    const mouseup$ = fromEvent<MouseEvent>(document, 'mouseup');
+    on('pointerdown', e => {
+      this.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      this.moved = false;
+      if (this.pointers.size === 2) this.lastPinch = this.pinchDistance();
+    });
 
-    const drag$ = mousedown$.pipe(
-      switchMap(startEvent => {
-        startEvent.preventDefault();
-        const startPan = this.skillService.pan();
-        return mousemove$.pipe(
-          map(moveEvent => ({
-            x: startPan.x + (moveEvent.clientX - startEvent.clientX),
-            y: startPan.y + (moveEvent.clientY - startEvent.clientY)
-          })),
-          takeUntil(mouseup$)
-        );
-      })
-    );
+    on('pointermove', e => {
+      const prev = this.pointers.get(e.pointerId);
+      if (!prev) return;
+      const cur = { x: e.clientX, y: e.clientY };
+      this.pointers.set(e.pointerId, cur);
 
-    this.sub.add(drag$.subscribe(pos => this.skillService.setPan(pos.x, pos.y)));
+      if (this.pointers.size === 1) {
+        const dx = cur.x - prev.x, dy = cur.y - prev.y;
+        if (!this.moved && Math.abs(dx) + Math.abs(dy) < 2) return;
+        this.moved = true;
+        const p = this.skillService.pan();
+        this.skillService.setPan(p.x + dx, p.y + dy);
+      } else if (this.pointers.size === 2) {
+        const dist = this.pinchDistance();
+        if (this.lastPinch > 0) {
+          const mid = this.pinchMidpoint();
+          this.skillService.zoomAt(this.skillService.zoom() * (dist / this.lastPinch), mid.x, mid.y);
+        }
+        this.lastPinch = dist;
+      }
+    });
 
-    const wheel$ = fromEvent<WheelEvent>(el, 'wheel');
-    this.sub.add(
-      wheel$.subscribe(event => {
-        event.preventDefault();
-        const currentZoom = this.skillService.zoom();
-        const zoomDelta = event.deltaY > 0 ? -0.1 : 0.1;
-        let newZoom = currentZoom + zoomDelta;
-        newZoom = Math.max(0.2, Math.min(newZoom, 3));
-        this.skillService.setZoom(newZoom);
-      })
-    );
+    const end = (e: PointerEvent) => { this.pointers.delete(e.pointerId); this.lastPinch = 0; };
+    on('pointerup', end);
+    on('pointercancel', end);
+    on('pointerleave', end);
+
+    on('wheel', e => {
+      e.preventDefault();
+      const c = this.center();
+      const factor = Math.exp(-e.deltaY * 0.0015);
+      this.skillService.zoomAt(this.skillService.zoom() * factor, e.clientX - c.x, e.clientY - c.y);
+    }, { passive: false });
+
+    on('click', e => {
+      // Clicking empty space dismisses the sidebar (not after a drag).
+      if (!this.moved && (e.target as HTMLElement).closest('app-tree-node') === null) {
+        this.skillService.selectNode(null);
+      }
+    });
   }
 
-  getParentX(parentId: string): number {
-    return this.skillService.nodes().find(n => n.id === parentId)?.x || 0;
+  private center() {
+    const r = this.mapContainer.nativeElement.getBoundingClientRect();
+    return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
   }
 
-  getParentY(parentId: string): number {
-    return this.skillService.nodes().find(n => n.id === parentId)?.y || 0;
+  private pinchPoints() { return [...this.pointers.values()]; }
+  private pinchDistance() {
+    const [a, b] = this.pinchPoints();
+    return Math.hypot(a.x - b.x, a.y - b.y);
+  }
+  private pinchMidpoint() {
+    const [a, b] = this.pinchPoints();
+    const c = this.center();
+    return { x: (a.x + b.x) / 2 - c.x, y: (a.y + b.y) / 2 - c.y };
   }
 
-  getParentStatus(parentId: string): string {
-    return this.skillService.nodes().find(n => n.id === parentId)?.status || 'locked';
+  fit() {
+    const r = this.mapContainer.nativeElement.getBoundingClientRect();
+    this.skillService.fitView(r.width, r.height);
   }
 
-  getLineLength(x1: number, y1: number, x2: number, y2: number): number {
-    return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+  zoomBy(factor: number) {
+    this.skillService.zoomAt(this.skillService.zoom() * factor, 0, 0);
+  }
+
+  setMode(mode: ViewMode) { this.skillService.setMode(mode); }
+
+  onSearch(e: Event) { this.skillService.search.set((e.target as HTMLInputElement).value); }
+
+  toggleDomain(id: string) {
+    const turningOn = this.skillService.domainFilter() !== id;
+    this.skillService.domainFilter.set(turningOn ? id : null);
+    const r = this.mapContainer.nativeElement.getBoundingClientRect();
+    if (turningOn) this.skillService.fitIds(this.skillService.idsInDomain(id), r.width, r.height);
+    else this.fit();
+  }
+
+  onRole(e: Event) {
+    const v = (e.target as HTMLSelectElement).value;
+    this.skillService.roleFilter.set(v || null);
+  }
+
+  clearFilters() {
+    this.skillService.domainFilter.set(null);
+    this.skillService.roleFilter.set(null);
+    this.skillService.search.set('');
+    this.fit();
+  }
+
+  isDimmed(n: SkillNode): boolean {
+    const vis = this.skillService.visibleIds();
+    return !!vis && !vis.has(n.id);
+  }
+
+  go(n: SkillNode) {
+    this.skillService.selectNode(n.id);
+    this.skillService.focusNode(n.id, window.innerWidth);
+  }
+
+  confirmReset() {
+    if (confirm('Clear your plan and start over?')) this.skillService.resetPlan();
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    this.cleanup.forEach(fn => fn());
   }
 }

@@ -1,65 +1,1908 @@
 {
-  "nodes": [
-    {
-      "id": "js_core",
-      "title": "JavaScript Fundamentals",
-      "type": "core",
-      "status": "mastered",
-      "requires": [],
-      "x": 0,
-      "y": 0,
-      "resumeContext": "The spark that started it all. Deep understanding of the event loop, closures, and DOM manipulation."
-    },
-    {
-      "id": "ts_basics",
-      "title": "TypeScript",
-      "type": "core",
-      "status": "mastered",
-      "requires": ["js_core"],
-      "x": 250,
-      "y": -150,
-      "resumeContext": "Strict typing, interfaces, and generics to build scalable and robust applications."
-    },
-    {
-      "id": "angular_core",
-      "title": "Angular",
-      "type": "framework",
-      "status": "unlocked",
-      "requires": ["ts_basics"],
-      "x": 500,
-      "y": -250,
-      "resumeContext": "Component architecture, dependency injection, and complex enterprise SPA routing.",
-      "linkedProjects": ["mydevskills"]
-    },
-    {
-      "id": "angular_adv",
-      "title": "Advanced Angular",
-      "type": "specialization",
-      "status": "locked",
-      "requires": ["angular_core"],
-      "x": 750,
-      "y": -350,
-      "resumeContext": "Signals, complex @angular/animations, custom directives, and deep performance tuning."
-    },
-    {
-      "id": "react_core",
-      "title": "React",
-      "type": "framework",
-      "status": "unlocked",
-      "requires": ["js_core"],
-      "x": 250,
-      "y": 150,
-      "resumeContext": "Functional components, hooks, and Virtual DOM mastery."
-    },
-    {
-      "id": "node_core",
-      "title": "Node.js",
-      "type": "core",
-      "status": "mastered",
-      "requires": ["js_core"],
-      "x": 0,
-      "y": 250,
-      "resumeContext": "Backend APIs, Express.js, and server-side JS."
-    }
-  ]
+ "domains": [
+  {
+   "id": "lang",
+   "name": "Languages",
+   "hue": 190
+  },
+  {
+   "id": "fe",
+   "name": "Frontend",
+   "hue": 330
+  },
+  {
+   "id": "be",
+   "name": "Backend & APIs",
+   "hue": 140
+  },
+  {
+   "id": "cloud",
+   "name": "Cloud & DevOps",
+   "hue": 215
+  },
+  {
+   "id": "data",
+   "name": "Data & Databases",
+   "hue": 25
+  },
+  {
+   "id": "ai",
+   "name": "AI & ML",
+   "hue": 270
+  },
+  {
+   "id": "mobile",
+   "name": "Mobile",
+   "hue": 100
+  },
+  {
+   "id": "sec",
+   "name": "Security & Identity",
+   "hue": 0
+  },
+  {
+   "id": "craft",
+   "name": "Engineering Craft",
+   "hue": 60
+  }
+ ],
+ "roles": [
+  {
+   "id": "fullstack",
+   "name": "Full-Stack Web",
+   "skills": [
+    "angular",
+    "rxjs",
+    "node",
+    "express",
+    "rest",
+    "postgres",
+    "firebase",
+    "docker",
+    "gh_actions",
+    "oauth",
+    "unit"
+   ]
+  },
+  {
+   "id": "frontend",
+   "name": "Frontend",
+   "skills": [
+    "angular_adv",
+    "react",
+    "a11y",
+    "css_anim",
+    "responsive",
+    "e2e",
+    "perf",
+    "vite"
+   ]
+  },
+  {
+   "id": "backend",
+   "name": "Backend",
+   "skills": [
+    "node",
+    "spring",
+    "go",
+    "postgres",
+    "microservices",
+    "mq",
+    "grpc",
+    "redis",
+    "owasp"
+   ]
+  },
+  {
+   "id": "devops",
+   "name": "Cloud / DevOps",
+   "skills": [
+    "k8s",
+    "terraform",
+    "gh_actions",
+    "cloud_run",
+    "linux",
+    "observe",
+    "iam"
+   ]
+  },
+  {
+   "id": "dataeng",
+   "name": "Data Engineer",
+   "skills": [
+    "bigquery",
+    "dbt",
+    "dataform",
+    "spark",
+    "beam",
+    "airflow",
+    "warehousing"
+   ]
+  },
+  {
+   "id": "aieng",
+   "name": "AI Engineer",
+   "skills": [
+    "gemini",
+    "rag",
+    "agents",
+    "mcp",
+    "genkit",
+    "ai_eval",
+    "vertex",
+    "vector_db"
+   ]
+  },
+  {
+   "id": "mobile",
+   "name": "Mobile",
+   "skills": [
+    "flutter",
+    "compose_ui",
+    "ios",
+    "rn",
+    "fcm",
+    "store_release"
+   ]
+  },
+  {
+   "id": "security",
+   "name": "Security / FinTech",
+   "skills": [
+    "oauth",
+    "rbac",
+    "mfa",
+    "zero_trust",
+    "pci",
+    "crypto",
+    "pentest",
+    "iam"
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "id": "me",
+   "title": "Developer",
+   "domain": "hub",
+   "type": "domain",
+   "status": "mastered",
+   "requires": [],
+   "resumeContext": "Every journey starts here. Pick a branch, or plan your own."
+  },
+  {
+   "id": "lang",
+   "title": "Languages",
+   "domain": "lang",
+   "type": "domain",
+   "status": "unlocked",
+   "requires": [
+    "me"
+   ],
+   "resumeContext": "The Languages branch of the map."
+  },
+  {
+   "id": "fe",
+   "title": "Frontend",
+   "domain": "fe",
+   "type": "domain",
+   "status": "unlocked",
+   "requires": [
+    "me"
+   ],
+   "resumeContext": "The Frontend branch of the map."
+  },
+  {
+   "id": "be",
+   "title": "Backend & APIs",
+   "domain": "be",
+   "type": "domain",
+   "status": "unlocked",
+   "requires": [
+    "me"
+   ],
+   "resumeContext": "The Backend & APIs branch of the map."
+  },
+  {
+   "id": "cloud",
+   "title": "Cloud & DevOps",
+   "domain": "cloud",
+   "type": "domain",
+   "status": "unlocked",
+   "requires": [
+    "me"
+   ],
+   "resumeContext": "The Cloud & DevOps branch of the map."
+  },
+  {
+   "id": "data",
+   "title": "Data & Databases",
+   "domain": "data",
+   "type": "domain",
+   "status": "unlocked",
+   "requires": [
+    "me"
+   ],
+   "resumeContext": "The Data & Databases branch of the map."
+  },
+  {
+   "id": "ai",
+   "title": "AI & ML",
+   "domain": "ai",
+   "type": "domain",
+   "status": "unlocked",
+   "requires": [
+    "me"
+   ],
+   "resumeContext": "The AI & ML branch of the map."
+  },
+  {
+   "id": "mobile",
+   "title": "Mobile",
+   "domain": "mobile",
+   "type": "domain",
+   "status": "unlocked",
+   "requires": [
+    "me"
+   ],
+   "resumeContext": "The Mobile branch of the map."
+  },
+  {
+   "id": "sec",
+   "title": "Security & Identity",
+   "domain": "sec",
+   "type": "domain",
+   "status": "unlocked",
+   "requires": [
+    "me"
+   ],
+   "resumeContext": "The Security & Identity branch of the map."
+  },
+  {
+   "id": "craft",
+   "title": "Engineering Craft",
+   "domain": "craft",
+   "type": "domain",
+   "status": "unlocked",
+   "requires": [
+    "me"
+   ],
+   "resumeContext": "The Engineering Craft branch of the map."
+  },
+  {
+   "id": "js",
+   "title": "JavaScript",
+   "domain": "lang",
+   "type": "language",
+   "status": "mastered",
+   "requires": [
+    "lang"
+   ],
+   "resumeContext": "The spark that started it all. Event loop, closures, async, DOM."
+  },
+  {
+   "id": "ts",
+   "title": "TypeScript",
+   "domain": "lang",
+   "type": "language",
+   "status": "mastered",
+   "requires": [
+    "js"
+   ],
+   "resumeContext": "Strict typing, generics and interfaces for scalable apps."
+  },
+  {
+   "id": "py",
+   "title": "Python",
+   "domain": "lang",
+   "type": "language",
+   "status": "unlocked",
+   "requires": [
+    "lang"
+   ],
+   "resumeContext": "Scripting, data work, automation and ML tooling."
+  },
+  {
+   "id": "java",
+   "title": "Java",
+   "domain": "lang",
+   "type": "language",
+   "status": "unlocked",
+   "requires": [
+    "lang"
+   ],
+   "resumeContext": "Object-oriented foundations and the JVM ecosystem."
+  },
+  {
+   "id": "kotlin",
+   "title": "Kotlin",
+   "domain": "lang",
+   "type": "language",
+   "status": "learning",
+   "requires": [
+    "java"
+   ],
+   "resumeContext": "Modern JVM language; the Android-first choice."
+  },
+  {
+   "id": "c",
+   "title": "C",
+   "domain": "lang",
+   "type": "language",
+   "status": "unlocked",
+   "requires": [
+    "lang"
+   ],
+   "resumeContext": "Memory, pointers and how machines really work."
+  },
+  {
+   "id": "cpp",
+   "title": "C++",
+   "domain": "lang",
+   "type": "language",
+   "status": "learning",
+   "requires": [
+    "c"
+   ],
+   "resumeContext": "Systems and performance-critical programming, RAII, templates."
+  },
+  {
+   "id": "csharp",
+   "title": "C#",
+   "domain": "lang",
+   "type": "language",
+   "status": "unlocked",
+   "requires": [
+    "java"
+   ],
+   "resumeContext": ".NET, LINQ, async/await and strong tooling."
+  },
+  {
+   "id": "go",
+   "title": "Go",
+   "domain": "lang",
+   "type": "language",
+   "status": "learning",
+   "requires": [
+    "c"
+   ],
+   "resumeContext": "Simple, concurrent services and CLIs."
+  },
+  {
+   "id": "rust",
+   "title": "Rust",
+   "domain": "lang",
+   "type": "language",
+   "status": "learning",
+   "requires": [
+    "c"
+   ],
+   "resumeContext": "Ownership, safety without GC, fearless concurrency."
+  },
+  {
+   "id": "swift",
+   "title": "Swift",
+   "domain": "lang",
+   "type": "language",
+   "status": "learning",
+   "requires": [
+    "lang"
+   ],
+   "resumeContext": "Apple platforms and SwiftUI."
+  },
+  {
+   "id": "dart",
+   "title": "Dart",
+   "domain": "lang",
+   "type": "language",
+   "status": "unlocked",
+   "requires": [
+    "lang"
+   ],
+   "resumeContext": "The language behind Flutter."
+  },
+  {
+   "id": "sql",
+   "title": "SQL",
+   "domain": "lang",
+   "type": "language",
+   "status": "unlocked",
+   "requires": [
+    "lang"
+   ],
+   "resumeContext": "Querying, joins, window functions and optimization."
+  },
+  {
+   "id": "bash",
+   "title": "Bash",
+   "domain": "lang",
+   "type": "language",
+   "status": "unlocked",
+   "requires": [
+    "lang"
+   ],
+   "resumeContext": "Shell scripting and pipelines."
+  },
+  {
+   "id": "pwsh",
+   "title": "PowerShell",
+   "domain": "lang",
+   "type": "language",
+   "status": "unlocked",
+   "requires": [
+    "bash"
+   ],
+   "resumeContext": "Windows automation and object pipelines."
+  },
+  {
+   "id": "php",
+   "title": "PHP",
+   "domain": "lang",
+   "type": "language",
+   "status": "locked",
+   "requires": [
+    "lang"
+   ],
+   "resumeContext": "Server-side web scripting powering a huge share of the web."
+  },
+  {
+   "id": "ruby",
+   "title": "Ruby",
+   "domain": "lang",
+   "type": "language",
+   "status": "locked",
+   "requires": [
+    "lang"
+   ],
+   "resumeContext": "Expressive scripting; home of Rails."
+  },
+  {
+   "id": "scala",
+   "title": "Scala",
+   "domain": "lang",
+   "type": "language",
+   "status": "locked",
+   "requires": [
+    "java"
+   ],
+   "resumeContext": "Functional + OO on the JVM; Spark heritage."
+  },
+  {
+   "id": "r",
+   "title": "R",
+   "domain": "lang",
+   "type": "language",
+   "status": "locked",
+   "requires": [
+    "py"
+   ],
+   "resumeContext": "Statistical computing and visualization."
+  },
+  {
+   "id": "wasm",
+   "title": "WebAssembly",
+   "domain": "lang",
+   "type": "tool",
+   "status": "locked",
+   "requires": [
+    "rust",
+    "js"
+   ],
+   "resumeContext": "Near-native speed in the browser."
+  },
+  {
+   "id": "html_css",
+   "title": "HTML & CSS",
+   "domain": "fe",
+   "type": "language",
+   "status": "mastered",
+   "requires": [
+    "fe"
+   ],
+   "resumeContext": "Semantic markup, layout, Grid/Flexbox, modern CSS."
+  },
+  {
+   "id": "sass",
+   "title": "Sass / SCSS",
+   "domain": "fe",
+   "type": "tool",
+   "status": "unlocked",
+   "requires": [
+    "html_css"
+   ],
+   "resumeContext": "Maintainable stylesheets with variables and mixins."
+  },
+  {
+   "id": "responsive",
+   "title": "Responsive Design",
+   "domain": "fe",
+   "type": "concept",
+   "status": "unlocked",
+   "requires": [
+    "html_css"
+   ],
+   "resumeContext": "Mobile-first, fluid layouts across every browser."
+  },
+  {
+   "id": "a11y",
+   "title": "Accessibility",
+   "domain": "fe",
+   "type": "concept",
+   "status": "learning",
+   "requires": [
+    "html_css"
+   ],
+   "resumeContext": "ARIA, keyboard navigation and inclusive design."
+  },
+  {
+   "id": "css_anim",
+   "title": "CSS Animation",
+   "domain": "fe",
+   "type": "concept",
+   "status": "unlocked",
+   "requires": [
+    "html_css"
+   ],
+   "resumeContext": "Keyframes, transitions and motion design."
+  },
+  {
+   "id": "svg",
+   "title": "SVG & Canvas",
+   "domain": "fe",
+   "type": "tool",
+   "status": "unlocked",
+   "requires": [
+    "js",
+    "html_css"
+   ],
+   "resumeContext": "Vector and bitmap graphics; powers this very map."
+  },
+  {
+   "id": "vite",
+   "title": "Vite & Bundlers",
+   "domain": "fe",
+   "type": "tool",
+   "status": "unlocked",
+   "requires": [
+    "js"
+   ],
+   "resumeContext": "Fast dev servers and optimized builds."
+  },
+  {
+   "id": "angular",
+   "title": "Angular",
+   "domain": "fe",
+   "type": "framework",
+   "status": "unlocked",
+   "requires": [
+    "ts",
+    "html_css"
+   ],
+   "resumeContext": "Component architecture, DI and enterprise SPAs."
+  },
+  {
+   "id": "rxjs",
+   "title": "RxJS",
+   "domain": "fe",
+   "type": "framework",
+   "status": "unlocked",
+   "requires": [
+    "angular"
+   ],
+   "resumeContext": "Reactive streams and event composition."
+  },
+  {
+   "id": "ng_signals",
+   "title": "Signals & Zoneless",
+   "domain": "fe",
+   "type": "concept",
+   "status": "learning",
+   "requires": [
+    "angular"
+   ],
+   "resumeContext": "Fine-grained reactivity and zone-free change detection."
+  },
+  {
+   "id": "ng_anim",
+   "title": "Angular Animations",
+   "domain": "fe",
+   "type": "framework",
+   "status": "unlocked",
+   "requires": [
+    "angular"
+   ],
+   "resumeContext": "Triggers, states and orchestrated transitions."
+  },
+  {
+   "id": "angular_adv",
+   "title": "Advanced Angular",
+   "domain": "fe",
+   "type": "concept",
+   "status": "learning",
+   "requires": [
+    "ng_signals",
+    "ng_anim"
+   ],
+   "resumeContext": "Custom directives, deferrable views and performance tuning."
+  },
+  {
+   "id": "ngrx",
+   "title": "NgRx / State",
+   "domain": "fe",
+   "type": "framework",
+   "status": "locked",
+   "requires": [
+    "rxjs"
+   ],
+   "resumeContext": "Predictable state management with effects and selectors."
+  },
+  {
+   "id": "ng_ssr",
+   "title": "SSR & Hydration",
+   "domain": "fe",
+   "type": "concept",
+   "status": "locked",
+   "requires": [
+    "angular"
+   ],
+   "resumeContext": "Server rendering for SEO and first paint."
+  },
+  {
+   "id": "react",
+   "title": "React",
+   "domain": "fe",
+   "type": "framework",
+   "status": "unlocked",
+   "requires": [
+    "js",
+    "html_css"
+   ],
+   "resumeContext": "Function components, hooks and the virtual DOM."
+  },
+  {
+   "id": "nextjs",
+   "title": "Next.js",
+   "domain": "fe",
+   "type": "framework",
+   "status": "locked",
+   "requires": [
+    "react"
+   ],
+   "resumeContext": "Full-stack React with server components."
+  },
+  {
+   "id": "vue",
+   "title": "Vue",
+   "domain": "fe",
+   "type": "framework",
+   "status": "locked",
+   "requires": [
+    "js",
+    "html_css"
+   ],
+   "resumeContext": "Approachable reactive framework with a gentle curve."
+  },
+  {
+   "id": "svelte",
+   "title": "Svelte",
+   "domain": "fe",
+   "type": "framework",
+   "status": "locked",
+   "requires": [
+    "js"
+   ],
+   "resumeContext": "Compiler-first UI framework."
+  },
+  {
+   "id": "tailwind",
+   "title": "Tailwind CSS",
+   "domain": "fe",
+   "type": "tool",
+   "status": "locked",
+   "requires": [
+    "html_css"
+   ],
+   "resumeContext": "Utility-first styling workflow."
+  },
+  {
+   "id": "webcomp",
+   "title": "Web Components",
+   "domain": "fe",
+   "type": "concept",
+   "status": "locked",
+   "requires": [
+    "js"
+   ],
+   "resumeContext": "Custom elements and shadow DOM."
+  },
+  {
+   "id": "pwa",
+   "title": "PWAs",
+   "domain": "fe",
+   "type": "concept",
+   "status": "locked",
+   "requires": [
+    "js",
+    "responsive"
+   ],
+   "resumeContext": "Installable offline-first web apps."
+  },
+  {
+   "id": "threejs",
+   "title": "WebGL / Three.js",
+   "domain": "fe",
+   "type": "framework",
+   "status": "locked",
+   "requires": [
+    "svg"
+   ],
+   "resumeContext": "3D on the web."
+  },
+  {
+   "id": "node",
+   "title": "Node.js",
+   "domain": "be",
+   "type": "framework",
+   "status": "mastered",
+   "requires": [
+    "js"
+   ],
+   "resumeContext": "Backend APIs and server-side JavaScript."
+  },
+  {
+   "id": "express",
+   "title": "Express",
+   "domain": "be",
+   "type": "framework",
+   "status": "unlocked",
+   "requires": [
+    "node"
+   ],
+   "resumeContext": "Minimal web framework and middleware patterns."
+  },
+  {
+   "id": "rest",
+   "title": "REST API Design",
+   "domain": "be",
+   "type": "concept",
+   "status": "unlocked",
+   "requires": [
+    "node"
+   ],
+   "resumeContext": "Resource modeling, versioning and status semantics."
+  },
+  {
+   "id": "nest",
+   "title": "NestJS",
+   "domain": "be",
+   "type": "framework",
+   "status": "locked",
+   "requires": [
+    "node",
+    "ts"
+   ],
+   "resumeContext": "Opinionated, Angular-style Node framework."
+  },
+  {
+   "id": "graphql",
+   "title": "GraphQL",
+   "domain": "be",
+   "type": "tool",
+   "status": "locked",
+   "requires": [
+    "rest"
+   ],
+   "resumeContext": "Typed query APIs."
+  },
+  {
+   "id": "ws",
+   "title": "WebSockets",
+   "domain": "be",
+   "type": "concept",
+   "status": "locked",
+   "requires": [
+    "node"
+   ],
+   "resumeContext": "Realtime bidirectional communication."
+  },
+  {
+   "id": "fastapi",
+   "title": "FastAPI / Flask",
+   "domain": "be",
+   "type": "framework",
+   "status": "locked",
+   "requires": [
+    "py",
+    "rest"
+   ],
+   "resumeContext": "Python web APIs with type hints."
+  },
+  {
+   "id": "spring",
+   "title": "Spring Boot",
+   "domain": "be",
+   "type": "framework",
+   "status": "locked",
+   "requires": [
+    "java",
+    "rest"
+   ],
+   "resumeContext": "Enterprise Java services."
+  },
+  {
+   "id": "dotnet",
+   "title": "ASP.NET Core",
+   "domain": "be",
+   "type": "framework",
+   "status": "locked",
+   "requires": [
+    "csharp",
+    "rest"
+   ],
+   "resumeContext": "Cross-platform .NET web APIs."
+  },
+  {
+   "id": "grpc",
+   "title": "gRPC",
+   "domain": "be",
+   "type": "tool",
+   "status": "locked",
+   "requires": [
+    "go",
+    "rest"
+   ],
+   "resumeContext": "Contract-first high-performance RPC."
+  },
+  {
+   "id": "microservices",
+   "title": "Microservices",
+   "domain": "be",
+   "type": "concept",
+   "status": "locked",
+   "requires": [
+    "rest",
+    "docker"
+   ],
+   "resumeContext": "Service boundaries, messaging and resilience."
+  },
+  {
+   "id": "mq",
+   "title": "Pub/Sub & Queues",
+   "domain": "be",
+   "type": "concept",
+   "status": "locked",
+   "requires": [
+    "microservices"
+   ],
+   "resumeContext": "Async messaging (Pub/Sub, Kafka, RabbitMQ)."
+  },
+  {
+   "id": "firebase",
+   "title": "Firebase",
+   "domain": "cloud",
+   "type": "tool",
+   "status": "unlocked",
+   "requires": [
+    "js"
+   ],
+   "resumeContext": "Hosting, auth, Firestore and functions; this app deploys here."
+  },
+  {
+   "id": "fb_hosting",
+   "title": "Firebase Hosting",
+   "domain": "cloud",
+   "type": "tool",
+   "status": "unlocked",
+   "requires": [
+    "firebase"
+   ],
+   "resumeContext": "Global CDN hosting with preview channels."
+  },
+  {
+   "id": "cloud_fn",
+   "title": "Cloud Functions",
+   "domain": "cloud",
+   "type": "tool",
+   "status": "learning",
+   "requires": [
+    "firebase",
+    "node"
+   ],
+   "resumeContext": "Event-driven serverless backends."
+  },
+  {
+   "id": "gcp",
+   "title": "Google Cloud",
+   "domain": "cloud",
+   "type": "tool",
+   "status": "unlocked",
+   "requires": [
+    "cloud"
+   ],
+   "resumeContext": "Core GCP services and gcloud tooling."
+  },
+  {
+   "id": "gcs",
+   "title": "Cloud Storage",
+   "domain": "cloud",
+   "type": "tool",
+   "status": "unlocked",
+   "requires": [
+    "gcp"
+   ],
+   "resumeContext": "Object storage and signed URLs."
+  },
+  {
+   "id": "cloud_run",
+   "title": "Cloud Run",
+   "domain": "cloud",
+   "type": "tool",
+   "status": "learning",
+   "requires": [
+    "gcp",
+    "docker"
+   ],
+   "resumeContext": "Serverless containers."
+  },
+  {
+   "id": "docker",
+   "title": "Docker",
+   "domain": "cloud",
+   "type": "tool",
+   "status": "unlocked",
+   "requires": [
+    "bash"
+   ],
+   "resumeContext": "Containerized, reproducible builds."
+  },
+  {
+   "id": "compose",
+   "title": "Docker Compose",
+   "domain": "cloud",
+   "type": "tool",
+   "status": "unlocked",
+   "requires": [
+    "docker"
+   ],
+   "resumeContext": "Multi-container local environments."
+  },
+  {
+   "id": "k8s",
+   "title": "Kubernetes",
+   "domain": "cloud",
+   "type": "tool",
+   "status": "locked",
+   "requires": [
+    "docker"
+   ],
+   "resumeContext": "Container orchestration at scale."
+  },
+  {
+   "id": "cicd",
+   "title": "CI/CD",
+   "domain": "cloud",
+   "type": "concept",
+   "status": "unlocked",
+   "requires": [
+    "cloud"
+   ],
+   "resumeContext": "Automated test, build and deploy pipelines."
+  },
+  {
+   "id": "gh_actions",
+   "title": "GitHub Actions",
+   "domain": "cloud",
+   "type": "tool",
+   "status": "unlocked",
+   "requires": [
+    "cicd"
+   ],
+   "resumeContext": "Workflows that deploy this site on every push."
+  },
+  {
+   "id": "linux",
+   "title": "Linux",
+   "domain": "cloud",
+   "type": "tool",
+   "status": "unlocked",
+   "requires": [
+    "bash"
+   ],
+   "resumeContext": "Shell, processes, permissions and services."
+  },
+  {
+   "id": "terraform",
+   "title": "Terraform / IaC",
+   "domain": "cloud",
+   "type": "tool",
+   "status": "locked",
+   "requires": [
+    "cicd"
+   ],
+   "resumeContext": "Declarative infrastructure."
+  },
+  {
+   "id": "aws",
+   "title": "AWS",
+   "domain": "cloud",
+   "type": "tool",
+   "status": "locked",
+   "requires": [
+    "cloud"
+   ],
+   "resumeContext": "Amazon cloud: EC2, S3, Lambda."
+  },
+  {
+   "id": "azure",
+   "title": "Azure",
+   "domain": "cloud",
+   "type": "tool",
+   "status": "locked",
+   "requires": [
+    "cloud"
+   ],
+   "resumeContext": "Microsoft cloud services."
+  },
+  {
+   "id": "observe",
+   "title": "Observability",
+   "domain": "cloud",
+   "type": "concept",
+   "status": "locked",
+   "requires": [
+    "cicd"
+   ],
+   "resumeContext": "Logs, metrics and traces."
+  },
+  {
+   "id": "relational",
+   "title": "Relational Modeling",
+   "domain": "data",
+   "type": "concept",
+   "status": "unlocked",
+   "requires": [
+    "sql"
+   ],
+   "resumeContext": "Normalization, keys, indexes and transactions."
+  },
+  {
+   "id": "postgres",
+   "title": "PostgreSQL",
+   "domain": "data",
+   "type": "tool",
+   "status": "unlocked",
+   "requires": [
+    "relational"
+   ],
+   "resumeContext": "Powerful open-source relational database."
+  },
+  {
+   "id": "mysql",
+   "title": "MySQL",
+   "domain": "data",
+   "type": "tool",
+   "status": "locked",
+   "requires": [
+    "relational"
+   ],
+   "resumeContext": "Widely deployed relational database."
+  },
+  {
+   "id": "sqlite",
+   "title": "SQLite",
+   "domain": "data",
+   "type": "tool",
+   "status": "unlocked",
+   "requires": [
+    "relational"
+   ],
+   "resumeContext": "Embedded database for apps and tests."
+  },
+  {
+   "id": "nosql",
+   "title": "NoSQL Concepts",
+   "domain": "data",
+   "type": "concept",
+   "status": "unlocked",
+   "requires": [
+    "data"
+   ],
+   "resumeContext": "Document, key-value and wide-column tradeoffs."
+  },
+  {
+   "id": "firestore",
+   "title": "Firestore",
+   "domain": "data",
+   "type": "tool",
+   "status": "unlocked",
+   "requires": [
+    "nosql",
+    "firebase"
+   ],
+   "resumeContext": "Realtime document database with security rules."
+  },
+  {
+   "id": "mongo",
+   "title": "MongoDB",
+   "domain": "data",
+   "type": "tool",
+   "status": "locked",
+   "requires": [
+    "nosql"
+   ],
+   "resumeContext": "Document database."
+  },
+  {
+   "id": "redis",
+   "title": "Redis",
+   "domain": "data",
+   "type": "tool",
+   "status": "locked",
+   "requires": [
+    "nosql"
+   ],
+   "resumeContext": "In-memory cache and data structures."
+  },
+  {
+   "id": "bigquery",
+   "title": "BigQuery",
+   "domain": "data",
+   "type": "tool",
+   "status": "unlocked",
+   "requires": [
+    "sql",
+    "gcp"
+   ],
+   "resumeContext": "Serverless analytics warehouse."
+  },
+  {
+   "id": "bq_opt",
+   "title": "BigQuery Optimization",
+   "domain": "data",
+   "type": "concept",
+   "status": "learning",
+   "requires": [
+    "bigquery"
+   ],
+   "resumeContext": "Partitioning, clustering and cost control."
+  },
+  {
+   "id": "warehousing",
+   "title": "Data Warehousing",
+   "domain": "data",
+   "type": "concept",
+   "status": "locked",
+   "requires": [
+    "bigquery"
+   ],
+   "resumeContext": "Dimensional modeling and ELT."
+  },
+  {
+   "id": "dataform",
+   "title": "Dataform",
+   "domain": "data",
+   "type": "tool",
+   "status": "locked",
+   "requires": [
+    "bigquery"
+   ],
+   "resumeContext": "SQLX transformations for BigQuery."
+  },
+  {
+   "id": "dbt",
+   "title": "dbt",
+   "domain": "data",
+   "type": "tool",
+   "status": "locked",
+   "requires": [
+    "bigquery"
+   ],
+   "resumeContext": "Analytics engineering with tested models."
+  },
+  {
+   "id": "pandas",
+   "title": "Pandas & NumPy",
+   "domain": "data",
+   "type": "framework",
+   "status": "unlocked",
+   "requires": [
+    "py"
+   ],
+   "resumeContext": "Dataframes and numeric computing."
+  },
+  {
+   "id": "notebooks",
+   "title": "Jupyter Notebooks",
+   "domain": "data",
+   "type": "tool",
+   "status": "unlocked",
+   "requires": [
+    "py"
+   ],
+   "resumeContext": "Exploratory analysis and reporting."
+  },
+  {
+   "id": "dataviz",
+   "title": "Data Visualization",
+   "domain": "data",
+   "type": "concept",
+   "status": "unlocked",
+   "requires": [
+    "pandas"
+   ],
+   "resumeContext": "Charts that communicate."
+  },
+  {
+   "id": "spark",
+   "title": "Apache Spark",
+   "domain": "data",
+   "type": "framework",
+   "status": "locked",
+   "requires": [
+    "py"
+   ],
+   "resumeContext": "Distributed data processing."
+  },
+  {
+   "id": "beam",
+   "title": "Beam / Dataflow",
+   "domain": "data",
+   "type": "framework",
+   "status": "locked",
+   "requires": [
+    "py",
+    "gcp"
+   ],
+   "resumeContext": "Unified batch and streaming pipelines."
+  },
+  {
+   "id": "airflow",
+   "title": "Airflow / Composer",
+   "domain": "data",
+   "type": "tool",
+   "status": "locked",
+   "requires": [
+    "py"
+   ],
+   "resumeContext": "Workflow orchestration."
+  },
+  {
+   "id": "llm",
+   "title": "LLMs & Prompting",
+   "domain": "ai",
+   "type": "concept",
+   "status": "unlocked",
+   "requires": [
+    "ai"
+   ],
+   "resumeContext": "Prompt design, context management and model behavior."
+  },
+  {
+   "id": "gemini",
+   "title": "Gemini API",
+   "domain": "ai",
+   "type": "tool",
+   "status": "unlocked",
+   "requires": [
+    "llm"
+   ],
+   "resumeContext": "Multimodal generative models via API."
+  },
+  {
+   "id": "agents",
+   "title": "AI Agents & Tools",
+   "domain": "ai",
+   "type": "concept",
+   "status": "unlocked",
+   "requires": [
+    "llm"
+   ],
+   "resumeContext": "Tool use, planning and agentic workflows."
+  },
+  {
+   "id": "mcp",
+   "title": "Model Context Protocol",
+   "domain": "ai",
+   "type": "tool",
+   "status": "learning",
+   "requires": [
+    "agents"
+   ],
+   "resumeContext": "Standard interface between models and tools."
+  },
+  {
+   "id": "vector_db",
+   "title": "Vector Databases",
+   "domain": "ai",
+   "type": "tool",
+   "status": "learning",
+   "requires": [
+    "llm",
+    "nosql"
+   ],
+   "resumeContext": "Embeddings and similarity search."
+  },
+  {
+   "id": "rag",
+   "title": "RAG Systems",
+   "domain": "ai",
+   "type": "concept",
+   "status": "learning",
+   "requires": [
+    "llm",
+    "vector_db"
+   ],
+   "resumeContext": "Grounding model answers in your data."
+  },
+  {
+   "id": "genkit",
+   "title": "Firebase Genkit",
+   "domain": "ai",
+   "type": "framework",
+   "status": "learning",
+   "requires": [
+    "llm",
+    "firebase"
+   ],
+   "resumeContext": "Framework for production AI flows."
+  },
+  {
+   "id": "ai_eval",
+   "title": "LLM Evaluation",
+   "domain": "ai",
+   "type": "concept",
+   "status": "locked",
+   "requires": [
+    "llm"
+   ],
+   "resumeContext": "Evals, guardrails and regression suites."
+  },
+  {
+   "id": "finetune",
+   "title": "Fine-tuning",
+   "domain": "ai",
+   "type": "concept",
+   "status": "locked",
+   "requires": [
+    "llm",
+    "deep"
+   ],
+   "resumeContext": "Adapting models to a domain."
+  },
+  {
+   "id": "ml_basics",
+   "title": "ML Fundamentals",
+   "domain": "ai",
+   "type": "concept",
+   "status": "learning",
+   "requires": [
+    "py"
+   ],
+   "resumeContext": "Supervised/unsupervised learning and validation."
+  },
+  {
+   "id": "stats",
+   "title": "Statistics",
+   "domain": "ai",
+   "type": "concept",
+   "status": "learning",
+   "requires": [
+    "pandas"
+   ],
+   "resumeContext": "Distributions, testing and inference."
+  },
+  {
+   "id": "sklearn",
+   "title": "scikit-learn",
+   "domain": "ai",
+   "type": "framework",
+   "status": "learning",
+   "requires": [
+    "ml_basics"
+   ],
+   "resumeContext": "Classical ML in Python."
+  },
+  {
+   "id": "deep",
+   "title": "Deep Learning",
+   "domain": "ai",
+   "type": "concept",
+   "status": "locked",
+   "requires": [
+    "ml_basics"
+   ],
+   "resumeContext": "Neural networks and backpropagation."
+  },
+  {
+   "id": "pytorch",
+   "title": "PyTorch",
+   "domain": "ai",
+   "type": "framework",
+   "status": "locked",
+   "requires": [
+    "deep"
+   ],
+   "resumeContext": "Research-friendly deep learning framework."
+  },
+  {
+   "id": "tensorflow",
+   "title": "TensorFlow",
+   "domain": "ai",
+   "type": "framework",
+   "status": "locked",
+   "requires": [
+    "deep"
+   ],
+   "resumeContext": "Production deep learning and TF Lite."
+  },
+  {
+   "id": "nlp",
+   "title": "NLP",
+   "domain": "ai",
+   "type": "concept",
+   "status": "locked",
+   "requires": [
+    "ml_basics"
+   ],
+   "resumeContext": "Text understanding and generation."
+  },
+  {
+   "id": "cv",
+   "title": "Computer Vision",
+   "domain": "ai",
+   "type": "concept",
+   "status": "locked",
+   "requires": [
+    "deep"
+   ],
+   "resumeContext": "Image and video understanding."
+  },
+  {
+   "id": "vertex",
+   "title": "Vertex AI",
+   "domain": "ai",
+   "type": "tool",
+   "status": "locked",
+   "requires": [
+    "gcp",
+    "ml_basics"
+   ],
+   "resumeContext": "Managed ML platform on GCP."
+  },
+  {
+   "id": "bqml",
+   "title": "BigQuery ML",
+   "domain": "ai",
+   "type": "tool",
+   "status": "locked",
+   "requires": [
+    "bigquery",
+    "ml_basics"
+   ],
+   "resumeContext": "Train models with SQL."
+  },
+  {
+   "id": "android",
+   "title": "Android",
+   "domain": "mobile",
+   "type": "tool",
+   "status": "unlocked",
+   "requires": [
+    "kotlin"
+   ],
+   "resumeContext": "Native Android apps and SDK tooling."
+  },
+  {
+   "id": "compose_ui",
+   "title": "Jetpack Compose",
+   "domain": "mobile",
+   "type": "framework",
+   "status": "learning",
+   "requires": [
+    "android"
+   ],
+   "resumeContext": "Declarative Android UI."
+  },
+  {
+   "id": "flutter",
+   "title": "Flutter",
+   "domain": "mobile",
+   "type": "framework",
+   "status": "unlocked",
+   "requires": [
+    "dart"
+   ],
+   "resumeContext": "Cross-platform UI from one codebase."
+  },
+  {
+   "id": "flutter_state",
+   "title": "Flutter State",
+   "domain": "mobile",
+   "type": "concept",
+   "status": "learning",
+   "requires": [
+    "flutter"
+   ],
+   "resumeContext": "Provider, Riverpod and Bloc patterns."
+  },
+  {
+   "id": "ios",
+   "title": "iOS / SwiftUI",
+   "domain": "mobile",
+   "type": "tool",
+   "status": "learning",
+   "requires": [
+    "swift"
+   ],
+   "resumeContext": "Native Apple apps."
+  },
+  {
+   "id": "rn",
+   "title": "React Native",
+   "domain": "mobile",
+   "type": "framework",
+   "status": "locked",
+   "requires": [
+    "react"
+   ],
+   "resumeContext": "React for native mobile."
+  },
+  {
+   "id": "capacitor",
+   "title": "Capacitor / Ionic",
+   "domain": "mobile",
+   "type": "framework",
+   "status": "locked",
+   "requires": [
+    "angular"
+   ],
+   "resumeContext": "Wrap web apps as native apps."
+  },
+  {
+   "id": "kmp",
+   "title": "Kotlin Multiplatform",
+   "domain": "mobile",
+   "type": "framework",
+   "status": "locked",
+   "requires": [
+    "kotlin"
+   ],
+   "resumeContext": "Share logic across platforms."
+  },
+  {
+   "id": "fcm",
+   "title": "Push (FCM)",
+   "domain": "mobile",
+   "type": "tool",
+   "status": "learning",
+   "requires": [
+    "firebase"
+   ],
+   "resumeContext": "Cross-platform push notifications."
+  },
+  {
+   "id": "store_release",
+   "title": "Store Release",
+   "domain": "mobile",
+   "type": "concept",
+   "status": "locked",
+   "requires": [
+    "android",
+    "cicd"
+   ],
+   "resumeContext": "Signing, review and staged rollouts."
+  },
+  {
+   "id": "authn",
+   "title": "Authentication",
+   "domain": "sec",
+   "type": "concept",
+   "status": "unlocked",
+   "requires": [
+    "sec"
+   ],
+   "resumeContext": "Sessions, tokens and credential handling."
+  },
+  {
+   "id": "fb_auth",
+   "title": "Firebase Auth",
+   "domain": "sec",
+   "type": "tool",
+   "status": "unlocked",
+   "requires": [
+    "authn",
+    "firebase"
+   ],
+   "resumeContext": "Managed identity providers and custom claims."
+  },
+  {
+   "id": "oauth",
+   "title": "OAuth2 / OIDC / JWT",
+   "domain": "sec",
+   "type": "concept",
+   "status": "unlocked",
+   "requires": [
+    "authn"
+   ],
+   "resumeContext": "Delegated auth and signed tokens."
+  },
+  {
+   "id": "rbac",
+   "title": "RBAC & Access Control",
+   "domain": "sec",
+   "type": "concept",
+   "status": "learning",
+   "requires": [
+    "authn"
+   ],
+   "resumeContext": "Roles, permissions and least privilege."
+  },
+  {
+   "id": "mfa",
+   "title": "2FA & WebAuthn",
+   "domain": "sec",
+   "type": "concept",
+   "status": "learning",
+   "requires": [
+    "authn"
+   ],
+   "resumeContext": "Second factors and biometric passkeys."
+  },
+  {
+   "id": "secrets",
+   "title": "Secrets Management",
+   "domain": "sec",
+   "type": "tool",
+   "status": "unlocked",
+   "requires": [
+    "gcp"
+   ],
+   "resumeContext": "Never ship credentials; rotate and vault them."
+  },
+  {
+   "id": "iam",
+   "title": "Cloud IAM",
+   "domain": "sec",
+   "type": "tool",
+   "status": "learning",
+   "requires": [
+    "gcp",
+    "rbac"
+   ],
+   "resumeContext": "Service accounts and policy bindings."
+  },
+  {
+   "id": "owasp",
+   "title": "OWASP Top 10",
+   "domain": "sec",
+   "type": "concept",
+   "status": "learning",
+   "requires": [
+    "rest"
+   ],
+   "resumeContext": "The classic web vulnerability catalog."
+  },
+  {
+   "id": "crypto",
+   "title": "Applied Cryptography",
+   "domain": "sec",
+   "type": "concept",
+   "status": "locked",
+   "requires": [
+    "authn"
+   ],
+   "resumeContext": "Hashing, encryption and key management."
+  },
+  {
+   "id": "zero_trust",
+   "title": "Zero Trust",
+   "domain": "sec",
+   "type": "concept",
+   "status": "locked",
+   "requires": [
+    "rbac",
+    "mfa"
+   ],
+   "resumeContext": "Verify every request, every time."
+  },
+  {
+   "id": "pci",
+   "title": "FinTech & PCI-DSS",
+   "domain": "sec",
+   "type": "concept",
+   "status": "locked",
+   "requires": [
+    "rbac",
+    "crypto"
+   ],
+   "resumeContext": "Payments compliance and data protection."
+  },
+  {
+   "id": "pentest",
+   "title": "Pentesting Basics",
+   "domain": "sec",
+   "type": "concept",
+   "status": "locked",
+   "requires": [
+    "owasp"
+   ],
+   "resumeContext": "Think like an attacker to defend better."
+  },
+  {
+   "id": "git",
+   "title": "Git & GitHub",
+   "domain": "craft",
+   "type": "tool",
+   "status": "mastered",
+   "requires": [
+    "craft"
+   ],
+   "resumeContext": "Branching, PR workflows and history surgery."
+  },
+  {
+   "id": "testing",
+   "title": "Testing Fundamentals",
+   "domain": "craft",
+   "type": "concept",
+   "status": "unlocked",
+   "requires": [
+    "craft"
+   ],
+   "resumeContext": "Test pyramid, mocks and coverage."
+  },
+  {
+   "id": "unit",
+   "title": "Unit Testing",
+   "domain": "craft",
+   "type": "concept",
+   "status": "unlocked",
+   "requires": [
+    "testing"
+   ],
+   "resumeContext": "Jest, Karma and Jasmine."
+  },
+  {
+   "id": "e2e",
+   "title": "E2E Testing",
+   "domain": "craft",
+   "type": "tool",
+   "status": "learning",
+   "requires": [
+    "testing"
+   ],
+   "resumeContext": "Playwright and Cypress browser tests."
+  },
+  {
+   "id": "tdd",
+   "title": "TDD",
+   "domain": "craft",
+   "type": "concept",
+   "status": "locked",
+   "requires": [
+    "unit"
+   ],
+   "resumeContext": "Red-green-refactor discipline."
+  },
+  {
+   "id": "algo",
+   "title": "Data Structures & Algorithms",
+   "domain": "craft",
+   "type": "concept",
+   "status": "unlocked",
+   "requires": [
+    "craft"
+   ],
+   "resumeContext": "Complexity analysis and core structures."
+  },
+  {
+   "id": "sysdesign",
+   "title": "System Design",
+   "domain": "craft",
+   "type": "concept",
+   "status": "learning",
+   "requires": [
+    "algo"
+   ],
+   "resumeContext": "Scalability, tradeoffs and architecture."
+  },
+  {
+   "id": "patterns",
+   "title": "Design Patterns",
+   "domain": "craft",
+   "type": "concept",
+   "status": "unlocked",
+   "requires": [
+    "craft"
+   ],
+   "resumeContext": "Reusable solutions to common design problems."
+  },
+  {
+   "id": "clean",
+   "title": "Clean Architecture",
+   "domain": "craft",
+   "type": "concept",
+   "status": "learning",
+   "requires": [
+    "patterns"
+   ],
+   "resumeContext": "Layers, boundaries and dependency rules."
+  },
+  {
+   "id": "ddd",
+   "title": "Domain-Driven Design",
+   "domain": "craft",
+   "type": "concept",
+   "status": "locked",
+   "requires": [
+    "clean"
+   ],
+   "resumeContext": "Model the business in code."
+  },
+  {
+   "id": "debug",
+   "title": "Debugging & Profiling",
+   "domain": "craft",
+   "type": "concept",
+   "status": "unlocked",
+   "requires": [
+    "craft"
+   ],
+   "resumeContext": "Systematic root-cause analysis."
+  },
+  {
+   "id": "perf",
+   "title": "Performance",
+   "domain": "craft",
+   "type": "concept",
+   "status": "learning",
+   "requires": [
+    "debug"
+   ],
+   "resumeContext": "Measure first; optimize bundles, queries and renders."
+  },
+  {
+   "id": "agile",
+   "title": "Agile & Collaboration",
+   "domain": "craft",
+   "type": "concept",
+   "status": "unlocked",
+   "requires": [
+    "craft"
+   ],
+   "resumeContext": "Iterative delivery with teams."
+  },
+  {
+   "id": "docs",
+   "title": "Technical Writing",
+   "domain": "craft",
+   "type": "concept",
+   "status": "unlocked",
+   "requires": [
+    "craft"
+   ],
+   "resumeContext": "Docs, READMEs and decision records."
+  },
+  {
+   "id": "oss",
+   "title": "Open Source",
+   "domain": "craft",
+   "type": "concept",
+   "status": "locked",
+   "requires": [
+    "git"
+   ],
+   "resumeContext": "Contributing and maintaining in public."
+  },
+  {
+   "id": "monorepo",
+   "title": "Monorepos (Nx)",
+   "domain": "craft",
+   "type": "tool",
+   "status": "locked",
+   "requires": [
+    "git"
+   ],
+   "resumeContext": "Scaling multiple apps in one repo."
+  }
+ ]
 }

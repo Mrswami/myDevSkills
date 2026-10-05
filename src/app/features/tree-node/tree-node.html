@@ -9,12 +9,6 @@
   (pointerdown)="$event.stopPropagation()"
 >
   <span class="ring"></span>
-  <span class="core">
-    @switch (node.status) {
-      @case ('locked') { <span class="glyph">🔒</span> }
-      @case ('mastered') { <span class="glyph">★</span> }
-      @default { <span class="glyph">{{ node.title.charAt(0) }}</span> }
-    }
-  </span>
+  <span class="core"><span class="glyph">{{ glyph() }}</span></span>
 </button>
-<span class="label" [attr.data-status]="node.status">{{ node.title }}</span>
+<span class="label" [attr.data-status]="node.status" [attr.data-type]="node.type">{{ node.title }}</span>

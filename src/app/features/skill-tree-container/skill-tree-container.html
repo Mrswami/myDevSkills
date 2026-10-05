@@ -1,46 +1,143 @@
 <div class="viewport" #mapContainer>
-  
-  <!-- Canvas that handles scaling and panning natively via inline styles powered by Signals -->
-  <div class="canvas" 
+
+  <!-- Camera canvas: pan/zoom driven by signals -->
+  <div class="canvas" [class.far]="skillService.zoom() < 0.45"
        [style.transform]="'translate(' + skillService.pan().x + 'px, ' + skillService.pan().y + 'px) scale(' + skillService.zoom() + ')'">
-    
-    <!-- SVG Connections -->
+
     <svg class="connections" width="1" height="1">
-      @for (node of skillService.nodes(); track node.id) {
-        @for (req of node.requires; track req) {
-          <line 
-            [attr.x1]="getParentX(req)" 
-            [attr.y1]="getParentY(req)" 
-            [attr.x2]="node.x" 
-            [attr.y2]="node.y"
-            [class.unlocked]="(node.status === 'unlocked' || node.status === 'mastered') && (getParentStatus(req) === 'unlocked' || getParentStatus(req) === 'mastered')"
-            [class.available]="node.status === 'available'"
-            [style.--line-length]="getLineLength(getParentX(req), getParentY(req), node.x, node.y)"
-          />
-        }
+      @for (e of skillService.edges(); track e.key) {
+        <line
+          [attr.x1]="e.x1" [attr.y1]="e.y1" [attr.x2]="e.x2" [attr.y2]="e.y2"
+          [class]="e.state" [class.dimmed]="e.dimmed" [class.cross]="e.cross"
+          [style.--line-length]="e.length" />
       }
     </svg>
 
-    <!-- HTML Nodes -->
     @for (node of skillService.nodes(); track node.id) {
-      <app-tree-node [node]="node"></app-tree-node>
+      <app-tree-node [node]="node" [dimmed]="isDimmed(node)"></app-tree-node>
     }
   </div>
 
-  <!-- Deferrable Detail Sidebar -->
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="brand">
+      <h1>Dev Journey Map</h1>
+      <span class="sub">{{ skillService.stats().total }} skills · {{ skillService.domains().length }} domains</span>
+    </div>
+
+    <div class="mode-switch" role="tablist" aria-label="Map mode">
+      <button role="tab" [attr.aria-selected]="skillService.mode() === 'journey'"
+              [class.active]="skillService.mode() === 'journey'" (click)="setMode('journey')">My Journey</button>
+      <button role="tab" [attr.aria-selected]="skillService.mode() === 'plan'"
+              [class.active]="skillService.mode() === 'plan'" (click)="setMode('plan')">Plan Yours</button>
+    </div>
+
+    <div class="stats" aria-live="polite">
+      <span class="chip gold">★ {{ skillService.stats().mastered }}</span>
+      <span class="chip green">✔ {{ skillService.stats().done }}</span>
+      <span class="chip cyan">◔ {{ skillService.stats().learning }}</span>
+      @if (skillService.mode() === 'plan') { <span class="chip violet">✎ {{ skillService.stats().planned }}</span> }
+    </div>
+  </header>
+
+  <!-- Filters -->
+  <section class="filters" aria-label="Filters">
+    <input class="search" type="search" placeholder="Search skills…" aria-label="Search skills"
+           [value]="skillService.search()" (input)="onSearch($event)" />
+
+    <select class="role" aria-label="Career path" (change)="onRole($event)" [value]="skillService.roleFilter() ?? ''">
+      <option value="">All career paths</option>
+      @for (r of skillService.roles(); track r.id) {
+        <option [value]="r.id" [selected]="skillService.roleFilter() === r.id">{{ r.name }}</option>
+      }
+    </select>
+
+    <div class="chips">
+      @for (d of skillService.domains(); track d.id) {
+        <button class="dchip" [class.on]="skillService.domainFilter() === d.id"
+                [style.--hue]="d.hue" (click)="toggleDomain(d.id)">{{ d.name }}</button>
+      }
+    </div>
+
+    @if (skillService.visibleIds()) {
+      <button class="clear" (click)="clearFilters()">Clear ✕</button>
+    }
+  </section>
+
+  <!-- Zoom controls -->
+  <div class="controls">
+    <button aria-label="Zoom in" (click)="zoomBy(1.3)">+</button>
+    <button aria-label="Zoom out" (click)="zoomBy(1 / 1.3)">−</button>
+    <button aria-label="Fit whole map" class="fit" (click)="fit()">⤢</button>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend" aria-hidden="true">
+    <span><i class="sw mastered"></i>Mastered</span>
+    <span><i class="sw done"></i>Proficient</span>
+    <span><i class="sw learning"></i>Learning</span>
+    <span><i class="sw avail"></i>Available</span>
+    <span><i class="sw locked"></i>Locked</span>
+  </div>
+
+  <!-- Detail sidebar -->
   @if (skillService.selectedNode(); as selected) {
-    <div class="sidebar" @slideInOut (click)="skillService.selectNode(null)">
+    <aside class="sidebar" @slideInOut (click)="skillService.selectNode(null)">
       <div class="sidebar-content" (click)="$event.stopPropagation()">
+        <button class="close" aria-label="Close details" (click)="skillService.selectNode(null)">✕</button>
         <h2>{{ selected.title }}</h2>
-        <span class="badge" [ngClass]="selected.status">{{ selected.status | uppercase }}</span>
+        <div class="meta">
+          <span class="badge" [attr.data-status]="selected.status">{{ selected.status.toUpperCase() }}</span>
+          <span class="kind">{{ selected.type }}</span>
+        </div>
         <p class="context">{{ selected.resumeContext }}</p>
-        
-        @if (selected.status === 'available') {
-          <button class="unlock-btn" (click)="skillService.unlockNode(selected.id)">
-            Unlock Skill
-          </button>
+
+        @if (skillService.selectedPrereqs().length && selected.type !== 'domain') {
+          <h3>Requires</h3>
+          <div class="links">
+            @for (p of skillService.selectedPrereqs(); track p.id) {
+              <button class="link" [attr.data-status]="p.status" (click)="go(p)">{{ p.title }}</button>
+            }
+          </div>
+        }
+        @if (skillService.selectedUnlocks().length) {
+          <h3>Leads to</h3>
+          <div class="links">
+            @for (u of skillService.selectedUnlocks(); track u.id) {
+              <button class="link" [attr.data-status]="u.status" (click)="go(u)">{{ u.title }}</button>
+            }
+          </div>
+        }
+
+        @if (skillService.mode() === 'plan' && selected.type !== 'domain') {
+          <div class="actions">
+            @if (skillService.planStatusOf(selected.id) !== 'planned' && skillService.planStatusOf(selected.id) !== 'done') {
+              <button class="act planned" (click)="skillService.setPlanStatus(selected.id, 'planned')">✎ Add to plan</button>
+            }
+            @if (skillService.planStatusOf(selected.id) !== 'learning' && skillService.planStatusOf(selected.id) !== 'done') {
+              <button class="act learning" (click)="skillService.setPlanStatus(selected.id, 'learning')">◔ Start learning</button>
+            }
+            @if (skillService.planStatusOf(selected.id) !== 'done') {
+              <button class="act done" (click)="skillService.completeInPlan(selected.id)">✔ Mark as learned</button>
+            }
+            @if (skillService.planStatusOf(selected.id)) {
+              <button class="act reset" (click)="skillService.setPlanStatus(selected.id, null)">Remove from plan</button>
+            }
+          </div>
+        } @else if (skillService.mode() === 'journey' && selected.type !== 'domain') {
+          <p class="hint">Switch to <b>Plan Yours</b> to chart your own path through this map.</p>
         }
       </div>
+    </aside>
+  }
+
+  @if (skillService.mode() === 'plan') {
+    <div class="plan-bar">
+      <span>Your plan is saved in this browser.</span>
+      @if (skillService.roleFilter(); as role) {
+        <button (click)="skillService.planRole(role)">Plan this career path</button>
+      }
+      <button class="ghost" (click)="confirmReset()">Reset</button>
     </div>
   }
 </div>
