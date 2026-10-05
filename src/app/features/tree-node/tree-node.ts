@@ -8,7 +8,11 @@ import { SkillNode, SkillTreeService } from '../../core/state/skill-tree.service
   imports: [CommonModule],
   templateUrl: './tree-node.html',
   styleUrls: ['./tree-node.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '[style.left.px]': 'node.x',
+    '[style.top.px]': 'node.y'
+  }
 })
 export class TreeNodeComponent {
   @Input({ required: true }) node!: SkillNode;

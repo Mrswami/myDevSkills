@@ -1,0 +1,104 @@
+:host {
+  position: absolute;
+  z-index: 2;
+  width: 0;
+  height: 0;
+  display: block;
+}
+
+// Type colors drive the glow hue
+[data-type='core'] { --hue: 190; }
+[data-type='framework'] { --hue: 340; }
+[data-type='specialization'] { --hue: 270; }
+[data-type='tool'] { --hue: 45; }
+
+.orb {
+  --c: hsl(var(--hue) 100% 60%);
+  position: absolute;
+  width: 72px;
+  height: 72px;
+  left: -36px;
+  top: -36px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  transition: transform 0.25s ease, filter 0.25s ease;
+
+  &:hover { transform: scale(1.12); }
+  &:focus-visible { outline: 2px solid #fff; outline-offset: 6px; }
+
+  .ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 3px solid var(--c);
+    box-shadow: 0 0 18px var(--c), inset 0 0 14px var(--c);
+    transition: all 0.3s ease;
+  }
+
+  .core {
+    position: absolute;
+    inset: 8px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, hsl(var(--hue) 100% 70%), hsl(var(--hue) 80% 25%));
+    color: #fff;
+    font: 700 22px/1 'Outfit', 'Inter', sans-serif;
+    text-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
+    transition: all 0.3s ease;
+  }
+
+  &.selected .ring { box-shadow: 0 0 30px var(--c), 0 0 60px var(--c), inset 0 0 18px var(--c); }
+
+  &[data-status='locked'] {
+    filter: grayscale(1) brightness(0.55);
+    cursor: not-allowed;
+    .ring { box-shadow: none; border-color: #444; }
+    .core { background: #1a1a22; }
+  }
+
+  &[data-status='available'] .ring {
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+
+  &[data-status='unlocked'] .core { filter: saturate(0.85); }
+
+  &[data-status='mastered'] {
+    .ring {
+      border-color: gold;
+      box-shadow: 0 0 26px gold, inset 0 0 14px gold;
+    }
+    .core {
+      background: radial-gradient(circle at 30% 30%, #fff3b0, #c8921a);
+      color: #3a2800;
+      text-shadow: none;
+    }
+  }
+}
+
+.label {
+  position: absolute;
+  top: 46px;
+  left: 0;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font: 600 13px 'Outfit', 'Inter', sans-serif;
+  color: #e8e8f0;
+  text-shadow: 0 2px 6px #000;
+  pointer-events: none;
+
+  &[data-status='locked'] { color: #666; }
+  &[data-status='mastered'] { color: gold; }
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 10px var(--c), inset 0 0 8px var(--c); transform: scale(1); }
+  50% { box-shadow: 0 0 34px var(--c), inset 0 0 18px var(--c); transform: scale(1.08); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orb .ring { animation: none !important; }
+}
