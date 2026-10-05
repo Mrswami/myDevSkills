@@ -9,11 +9,13 @@
       @for (node of skillService.nodes(); track node.id) {
         @for (req of node.requires; track req) {
           <line 
-            [attr.x1]="node.x" 
-            [attr.y1]="node.y" 
-            [attr.x2]="getParentX(req)" 
-            [attr.y2]="getParentY(req)"
-            [class.active]="node.status !== 'locked' && getParentStatus(req) !== 'locked'"
+            [attr.x1]="getParentX(req)" 
+            [attr.y1]="getParentY(req)" 
+            [attr.x2]="node.x" 
+            [attr.y2]="node.y"
+            [class.unlocked]="(node.status === 'unlocked' || node.status === 'mastered') && (getParentStatus(req) === 'unlocked' || getParentStatus(req) === 'mastered')"
+            [class.available]="node.status === 'available'"
+            [style.--line-length]="getLineLength(getParentX(req), getParentY(req), node.x, node.y)"
           />
         }
       }

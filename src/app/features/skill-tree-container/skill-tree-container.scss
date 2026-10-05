@@ -32,11 +32,25 @@
     stroke-width: 2;
     transition: stroke 0.5s ease-in-out, stroke-width 0.5s;
     
-    &.active {
+    &.available {
+      stroke: #00d2ff;
+      opacity: 0.5;
+      stroke-dasharray: var(--line-length);
+      stroke-dashoffset: var(--line-length);
+      animation: draw-line 0.8s ease-out forwards;
+    }
+
+    &.unlocked {
       stroke: #00d2ff;
       stroke-width: 4;
       filter: drop-shadow(0 0 8px #00d2ff);
     }
+  }
+}
+
+@keyframes draw-line {
+  to {
+    stroke-dashoffset: 0;
   }
 }
 

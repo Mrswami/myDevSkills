@@ -78,6 +78,10 @@ export class SkillTreeContainerComponent implements AfterViewInit, OnDestroy {
     return this.skillService.nodes().find(n => n.id === parentId)?.status || 'locked';
   }
 
+  getLineLength(x1: number, y1: number, x2: number, y2: number): number {
+    return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+  }
+
   ngOnDestroy() {
     this.sub.unsubscribe();
   }

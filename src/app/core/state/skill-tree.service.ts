@@ -4,7 +4,7 @@ export interface SkillNode {
   id: string;
   title: string;
   type: 'core' | 'specialization' | 'framework' | 'tool';
-  status: 'locked' | 'available' | 'unlocked' | 'mastered';
+  status: 'locked' | 'available' | 'unlocked' | 'mastered' | 'charging';
   requires: string[];
   x: number;
   y: number;
@@ -56,7 +56,19 @@ export class SkillTreeService {
     this.selectedNodeIdSignal.set(id);
   }
 
-  public unlockNode(id: string) {
+  public async unlockNodeSequence(id: string) {
+    // 1. Close sidebar
+    this.selectNode(null);
+
+    // 2. Set node to charging
+    this.nodesSignal.update(nodes => nodes.map(n => 
+      n.id === id ? { ...n, status: 'charging' as const } : n
+    ));
+
+    // 3. Wait for charge-up animation
+    await new Promise(resolve => setTimeout(resolve, 600));
+
+    // 4. Unlock and reveal children
     this.nodesSignal.update(nodes => {
       const updated = nodes.map(n => 
         n.id === id ? { ...n, status: 'unlocked' as const } : n
@@ -64,6 +76,10 @@ export class SkillTreeService {
       // Re-evaluate 'available' status for adjacent nodes down the tree
       return this.evaluateAvailability(updated);
     });
+  }
+
+  public unlockNode(id: string) {
+    this.unlockNodeSequence(id);
   }
 
   // Core recursive algorithm to check dependencies

@@ -60,8 +60,24 @@
     .core { background: #1a1a22; }
   }
 
-  &[data-status='available'] .ring {
-    animation: pulse 1.8s ease-in-out infinite;
+  &[data-status='charging'] {
+    animation: charge-shake 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    .ring {
+      border-color: #fff;
+      box-shadow: 0 0 40px #fff, inset 0 0 20px #fff;
+    }
+    .core {
+      background: #fff;
+      color: #000;
+      transform: scale(1.15);
+    }
+  }
+
+  &[data-status='available'] {
+    animation: pop-in 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) backwards;
+    .ring {
+      animation: pulse 1.8s ease-in-out infinite 0.6s;
+    }
   }
 
   &[data-status='unlocked'] .core { filter: saturate(0.85); }
@@ -97,6 +113,19 @@
 @keyframes pulse {
   0%, 100% { box-shadow: 0 0 10px var(--c), inset 0 0 8px var(--c); transform: scale(1); }
   50% { box-shadow: 0 0 34px var(--c), inset 0 0 18px var(--c); transform: scale(1.08); }
+}
+
+@keyframes charge-shake {
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-3px, 0, 0) scale(1.05); }
+  40%, 60% { transform: translate3d(3px, 0, 0) scale(1.05); }
+  100% { transform: scale(1.15); }
+}
+
+@keyframes pop-in {
+  0% { opacity: 0; transform: scale(0.2); }
+  100% { opacity: 1; transform: scale(1); }
 }
 
 @media (prefers-reduced-motion: reduce) {
