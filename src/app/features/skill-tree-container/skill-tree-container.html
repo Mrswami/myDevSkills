@@ -29,7 +29,7 @@
 
   <!-- Deferrable Detail Sidebar -->
   @if (skillService.selectedNode(); as selected) {
-    <div class="sidebar" (click)="skillService.selectNode(null)">
+    <div class="sidebar" @slideInOut (click)="skillService.selectNode(null)">
       <div class="sidebar-content" (click)="$event.stopPropagation()">
         <h2>{{ selected.title }}</h2>
         <span class="badge" [ngClass]="selected.status">{{ selected.status | uppercase }}</span>

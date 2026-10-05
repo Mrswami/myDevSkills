@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { SkillTreeService, SkillNode } from '../../core/state/skill-tree.service';
 import { TreeNodeComponent } from '../tree-node/tree-node';
 import { fromEvent, Subscription, switchMap, takeUntil, map } from 'rxjs';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-skill-tree-container',
@@ -11,7 +12,18 @@ import { fromEvent, Subscription, switchMap, takeUntil, map } from 'rxjs';
   imports: [CommonModule, TreeNodeComponent],
   templateUrl: './skill-tree-container.html',
   styleUrls: ['./skill-tree-container.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [
+    trigger('slideInOut', [
+      transition(':enter', [
+        style({ transform: 'translateX(100%)', opacity: 0 }),
+        animate('300ms cubic-bezier(0.25, 0.8, 0.25, 1)', style({ transform: 'translateX(0)', opacity: 1 }))
+      ]),
+      transition(':leave', [
+        animate('250ms cubic-bezier(0.4, 0, 0.2, 1)', style({ transform: 'translateX(100%)', opacity: 0 }))
+      ])
+    ])
+  ]
 })
 export class SkillTreeContainerComponent implements AfterViewInit, OnDestroy {
   public skillService = inject(SkillTreeService);

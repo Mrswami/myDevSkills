@@ -60,14 +60,15 @@
   right: 0;
   bottom: 0;
   width: 400px;
+  max-width: 100vw;
   background: rgba(15, 15, 20, 0.95);
   border-left: 1px solid #333;
   color: white;
   padding: 40px;
+  box-sizing: border-box;
   box-shadow: -10px 0 30px rgba(0,0,0,0.8);
   backdrop-filter: blur(10px);
   z-index: 100;
-  animation: slideIn 0.3s ease-out;
 
   h2 {
     margin-top: 0;
@@ -114,7 +115,3 @@
   }
 }
 
-@keyframes slideIn {
-  from { transform: translateX(100%); }
-  to { transform: translateX(0); }
-}
