@@ -1,12 +1,10 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
+import { SkillTreeContainerComponent } from './features/skill-tree-container/skill-tree-container';
 
 @Component({
-  imports: [RouterOutlet],
+  imports: [SkillTreeContainerComponent],
   selector: 'app-root',
   styleUrl: './app.scss',
   templateUrl: './app.html',
 })
-export class App {
-  protected readonly title = signal('mydevskills');
-}
+export class App {}

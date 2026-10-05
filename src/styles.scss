@@ -1,1 +1,10 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap');
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: #0d0d12;
+  color: #e8e8f0;
+  font-family: 'Outfit', 'Inter', sans-serif;
+  overflow: hidden;
+}
