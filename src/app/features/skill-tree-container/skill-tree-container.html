@@ -1,0 +1,44 @@
+<div class="viewport" #mapContainer>
+  
+  <!-- Canvas that handles scaling and panning natively via inline styles powered by Signals -->
+  <div class="canvas" 
+       [style.transform]="'translate(' + skillService.pan().x + 'px, ' + skillService.pan().y + 'px) scale(' + skillService.zoom() + ')'">
+    
+    <!-- SVG Connections -->
+    <svg class="connections" width="1" height="1">
+      @for (node of skillService.nodes(); track node.id) {
+        @for (req of node.requires; track req) {
+          <line 
+            [attr.x1]="node.x" 
+            [attr.y1]="node.y" 
+            [attr.x2]="getParentX(req)" 
+            [attr.y2]="getParentY(req)"
+            [class.active]="node.status !== 'locked' && getParentStatus(req) !== 'locked'"
+          />
+        }
+      }
+    </svg>
+
+    <!-- HTML Nodes -->
+    @for (node of skillService.nodes(); track node.id) {
+      <app-tree-node [node]="node"></app-tree-node>
+    }
+  </div>
+
+  <!-- Deferrable Detail Sidebar -->
+  @if (skillService.selectedNode(); as selected) {
+    <div class="sidebar" (click)="skillService.selectNode(null)">
+      <div class="sidebar-content" (click)="$event.stopPropagation()">
+        <h2>{{ selected.title }}</h2>
+        <span class="badge" [ngClass]="selected.status">{{ selected.status | uppercase }}</span>
+        <p class="context">{{ selected.resumeContext }}</p>
+        
+        @if (selected.status === 'available') {
+          <button class="unlock-btn" (click)="skillService.unlockNode(selected.id)">
+            Unlock Skill
+          </button>
+        }
+      </div>
+    </div>
+  }
+</div>

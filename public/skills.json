@@ -1,0 +1,65 @@
+{
+  "nodes": [
+    {
+      "id": "js_core",
+      "title": "JavaScript Fundamentals",
+      "type": "core",
+      "status": "mastered",
+      "requires": [],
+      "x": 0,
+      "y": 0,
+      "resumeContext": "The spark that started it all. Deep understanding of the event loop, closures, and DOM manipulation."
+    },
+    {
+      "id": "ts_basics",
+      "title": "TypeScript",
+      "type": "core",
+      "status": "mastered",
+      "requires": ["js_core"],
+      "x": 250,
+      "y": -150,
+      "resumeContext": "Strict typing, interfaces, and generics to build scalable and robust applications."
+    },
+    {
+      "id": "angular_core",
+      "title": "Angular",
+      "type": "framework",
+      "status": "unlocked",
+      "requires": ["ts_basics"],
+      "x": 500,
+      "y": -250,
+      "resumeContext": "Component architecture, dependency injection, and complex enterprise SPA routing.",
+      "linkedProjects": ["mydevskills"]
+    },
+    {
+      "id": "angular_adv",
+      "title": "Advanced Angular",
+      "type": "specialization",
+      "status": "locked",
+      "requires": ["angular_core"],
+      "x": 750,
+      "y": -350,
+      "resumeContext": "Signals, complex @angular/animations, custom directives, and deep performance tuning."
+    },
+    {
+      "id": "react_core",
+      "title": "React",
+      "type": "framework",
+      "status": "unlocked",
+      "requires": ["js_core"],
+      "x": 250,
+      "y": 150,
+      "resumeContext": "Functional components, hooks, and Virtual DOM mastery."
+    },
+    {
+      "id": "node_core",
+      "title": "Node.js",
+      "type": "core",
+      "status": "mastered",
+      "requires": ["js_core"],
+      "x": 0,
+      "y": 250,
+      "resumeContext": "Backend APIs, Express.js, and server-side JS."
+    }
+  ]
+}

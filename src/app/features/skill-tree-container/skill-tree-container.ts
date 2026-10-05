@@ -1,0 +1,84 @@
+import { Component, ElementRef, ViewChild, AfterViewInit, OnDestroy, ChangeDetectionStrategy, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
+import { SkillTreeService, SkillNode } from '../../core/state/skill-tree.service';
+import { TreeNodeComponent } from '../tree-node/tree-node';
+import { fromEvent, Subscription, switchMap, takeUntil, map } from 'rxjs';
+
+@Component({
+  selector: 'app-skill-tree-container',
+  standalone: true,
+  imports: [CommonModule, TreeNodeComponent],
+  templateUrl: './skill-tree-container.html',
+  styleUrls: ['./skill-tree-container.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class SkillTreeContainerComponent implements AfterViewInit, OnDestroy {
+  public skillService = inject(SkillTreeService);
+  private http = inject(HttpClient);
+  private sub = new Subscription();
+
+  @ViewChild('mapContainer', { static: true }) mapContainer!: ElementRef<HTMLDivElement>;
+
+  constructor() {
+    this.http.get<{nodes: SkillNode[]}>('skills.json').subscribe(data => {
+      this.skillService.loadNodes(data.nodes);
+    });
+  }
+
+  ngAfterViewInit() {
+    this.setupPanZoom();
+  }
+
+  private setupPanZoom() {
+    const el = this.mapContainer.nativeElement;
+
+    const mousedown$ = fromEvent<MouseEvent>(el, 'mousedown');
+    const mousemove$ = fromEvent<MouseEvent>(document, 'mousemove');
+    const mouseup$ = fromEvent<MouseEvent>(document, 'mouseup');
+
+    const drag$ = mousedown$.pipe(
+      switchMap(startEvent => {
+        startEvent.preventDefault();
+        const startPan = this.skillService.pan();
+        return mousemove$.pipe(
+          map(moveEvent => ({
+            x: startPan.x + (moveEvent.clientX - startEvent.clientX),
+            y: startPan.y + (moveEvent.clientY - startEvent.clientY)
+          })),
+          takeUntil(mouseup$)
+        );
+      })
+    );
+
+    this.sub.add(drag$.subscribe(pos => this.skillService.setPan(pos.x, pos.y)));
+
+    const wheel$ = fromEvent<WheelEvent>(el, 'wheel');
+    this.sub.add(
+      wheel$.subscribe(event => {
+        event.preventDefault();
+        const currentZoom = this.skillService.zoom();
+        const zoomDelta = event.deltaY > 0 ? -0.1 : 0.1;
+        let newZoom = currentZoom + zoomDelta;
+        newZoom = Math.max(0.2, Math.min(newZoom, 3));
+        this.skillService.setZoom(newZoom);
+      })
+    );
+  }
+
+  getParentX(parentId: string): number {
+    return this.skillService.nodes().find(n => n.id === parentId)?.x || 0;
+  }
+
+  getParentY(parentId: string): number {
+    return this.skillService.nodes().find(n => n.id === parentId)?.y || 0;
+  }
+
+  getParentStatus(parentId: string): string {
+    return this.skillService.nodes().find(n => n.id === parentId)?.status || 'locked';
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
+  }
+}

@@ -1,0 +1,106 @@
+.viewport {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #0d0d12;
+  cursor: grab;
+  position: relative;
+  
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.canvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+
+.connections {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: visible;
+  z-index: 1;
+  pointer-events: none;
+
+  line {
+    stroke: #333;
+    stroke-width: 2;
+    transition: stroke 0.5s ease-in-out, stroke-width 0.5s;
+    
+    &.active {
+      stroke: #00d2ff;
+      stroke-width: 4;
+      filter: drop-shadow(0 0 8px #00d2ff);
+    }
+  }
+}
+
+.sidebar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 400px;
+  background: rgba(15, 15, 20, 0.95);
+  border-left: 1px solid #333;
+  color: white;
+  padding: 40px;
+  box-shadow: -10px 0 30px rgba(0,0,0,0.8);
+  backdrop-filter: blur(10px);
+  z-index: 100;
+  animation: slideIn 0.3s ease-out;
+
+  h2 {
+    margin-top: 0;
+    font-size: 28px;
+    font-weight: 300;
+    letter-spacing: 2px;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 20px;
+
+    &.mastered { background: rgba(0, 210, 255, 0.2); color: #00d2ff; border: 1px solid #00d2ff; }
+    &.unlocked { background: rgba(76, 175, 80, 0.2); color: #4caf50; border: 1px solid #4caf50; }
+    &.available { background: rgba(255, 193, 7, 0.2); color: #ffc107; border: 1px solid #ffc107; }
+    &.locked { background: rgba(100, 100, 100, 0.2); color: #aaa; border: 1px solid #666; }
+  }
+
+  .context {
+    line-height: 1.6;
+    color: #ccc;
+  }
+
+  .unlock-btn {
+    margin-top: 30px;
+    background: transparent;
+    border: 2px solid #ffc107;
+    color: #ffc107;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+
+    &:hover {
+      background: #ffc107;
+      color: #000;
+      box-shadow: 0 0 15px rgba(255, 193, 7, 0.5);
+    }
+  }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
