@@ -40,7 +40,7 @@ export class SkillTreeContainerComponent implements AfterViewInit, OnDestroy {
       this.skillService.loadData(data);
       // Wait for the view to measure, then trigger cinematic startup animation
       requestAnimationFrame(() => {
-        const me = this.skillService.nodeMap().get('me');
+        const me = this.skillService.nodes().find(n => n.id === 'me');
         if (me) {
           // 1. Instant wide-shot
           this.skillService.setZoom(0.3);
