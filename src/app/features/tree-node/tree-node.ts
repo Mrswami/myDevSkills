@@ -11,6 +11,7 @@ import { SkillNode, SkillTreeService } from '../../core/state/skill-tree.service
     '[style.left.px]': 'node.x',
     '[style.top.px]': 'node.y',
     '[style.--hue]': 'hue()',
+    '[style.animation-delay.ms]': '(node.y > 0 ? node.y * 0.5 : 0)',
     '[class.dimmed]': 'dimmed',
   }
 })

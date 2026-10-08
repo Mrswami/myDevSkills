@@ -166,26 +166,25 @@ export class SkillTreeService {
   }
 
   /**
-   * District layout. Each domain is a compact district placed on a ring around the hub.
-   * Inside a district, nodes are layered by local prerequisite depth (same-domain only),
-   * bands extend away from the hub, and wide bands wrap into rows. Parents' lateral
-   * positions order children to keep edges short.
+   * Linear Roadmap Layout (roadmap.sh style).
+   * Domains are placed side-by-side at the top.
+   * Skills flow downwards in a linear/branching tree.
    */
   private layout(data: SkillData): SkillNode[] {
-    const COLS = 6;        // max nodes per row
-    const COL_W = 170;     // lateral spacing
-    const ROW_H = 120;     // radial spacing between rows
-    const START = 170;     // gap from district node to first row
-    const RING = 1500;     // distance of district nodes from hub
+    const COLS = 3;        // max nodes per row (tight for linear feel)
+    const COL_W = 200;     // lateral spacing
+    const ROW_H = 160;     // vertical spacing between rows
+    const START = 180;     // gap from domain node to first row
+    const DOMAIN_W = 1200; // spacing between domain columns
 
     const pos = new Map<string, { x: number; y: number }>();
-    pos.set('me', { x: 0, y: 0 });
+    pos.set('me', { x: 0, y: -300 });
 
     data.domains.forEach((dom, di) => {
-      const theta = -Math.PI / 2 + (di / data.domains.length) * Math.PI * 2;
-      const u = { x: Math.cos(theta), y: Math.sin(theta) };   // away from hub
-      const v = { x: -u.y, y: u.x };                          // lateral
-      const origin = { x: u.x * RING, y: u.y * RING };
+      // Flow downwards
+      const u = { x: 0, y: 1 };
+      const v = { x: 1, y: 0 };
+      const origin = { x: (di - (data.domains.length - 1) / 2) * DOMAIN_W, y: 0 };
       pos.set(dom.id, origin);
 
       const members = data.nodes.filter(n => n.domain === dom.id && n.type !== 'domain');
@@ -208,10 +207,11 @@ export class SkillTreeService {
       const lateral = new Map<string, number>();
       let offset = START;
       const maxD = Math.max(1, ...depth.values());
+      
       for (let d = 1; d <= maxD; d++) {
         let layer = members.filter(m => depth.get(m.id) === d);
         if (!layer.length) continue;
-        // Order by mean lateral position of same-domain parents (barycenter heuristic)
+        // Order by mean lateral position of same-domain parents
         const score = (m: typeof layer[number]) => {
           const ps = m.requires.filter(r => lateral.has(r)).map(r => lateral.get(r)!);
           return ps.length ? ps.reduce((a, b) => a + b, 0) / ps.length : 0;
@@ -220,11 +220,11 @@ export class SkillTreeService {
           .sort((a, b) => a.s - b.s || a.i - b.i).map(x => x.m);
 
         const rows = Math.ceil(layer.length / COLS);
-        const perRow = Math.ceil(layer.length / rows);   // balance rows
+        const perRow = Math.ceil(layer.length / rows);
         for (let r = 0; r < rows; r++) {
           const chunk = layer.slice(r * perRow, (r + 1) * perRow);
           chunk.forEach((m, i) => {
-            const lat = (i - (chunk.length - 1) / 2) * COL_W + (r % 2 ? COL_W / 4 : 0);
+            const lat = (i - (chunk.length - 1) / 2) * COL_W;
             lateral.set(m.id, lat);
             pos.set(m.id, {
               x: origin.x + u.x * offset + v.x * lat,
@@ -233,7 +233,7 @@ export class SkillTreeService {
           });
           offset += ROW_H;
         }
-        offset += 30; // breathing room between depth bands
+        offset += 40; // breathing room between depth bands
       }
     });
     return data.nodes.map(n => ({ ...n, ...(pos.get(n.id) ?? { x: 0, y: 0 }) }));
