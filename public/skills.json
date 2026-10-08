@@ -564,7 +564,8 @@
    "type": "tool",
    "status": "unlocked",
    "requires": [
-    "js"
+    "js",
+    "fe"
    ],
    "resumeContext": "Fast dev servers and optimized builds."
   },
@@ -689,7 +690,8 @@
    "type": "framework",
    "status": "locked",
    "requires": [
-    "js"
+    "js",
+    "fe"
    ],
    "resumeContext": "Compiler-first UI framework."
   },
@@ -711,7 +713,8 @@
    "type": "concept",
    "status": "locked",
    "requires": [
-    "js"
+    "js",
+    "fe"
    ],
    "resumeContext": "Custom elements and shadow DOM."
   },
@@ -745,7 +748,8 @@
    "type": "framework",
    "status": "mastered",
    "requires": [
-    "js"
+    "js",
+    "be"
    ],
    "resumeContext": "Backend APIs and server-side JavaScript."
   },
@@ -883,7 +887,8 @@
    "type": "tool",
    "status": "unlocked",
    "requires": [
-    "js"
+    "js",
+    "cloud"
    ],
    "resumeContext": "Hosting, auth, Firestore and functions; this app deploys here."
   },
@@ -951,7 +956,8 @@
    "type": "tool",
    "status": "unlocked",
    "requires": [
-    "bash"
+    "bash",
+    "cloud"
    ],
    "resumeContext": "Containerized, reproducible builds."
   },
@@ -1006,7 +1012,8 @@
    "type": "tool",
    "status": "unlocked",
    "requires": [
-    "bash"
+    "bash",
+    "cloud"
    ],
    "resumeContext": "Shell, processes, permissions and services."
   },
@@ -1061,7 +1068,8 @@
    "type": "concept",
    "status": "unlocked",
    "requires": [
-    "sql"
+    "sql",
+    "data"
    ],
    "resumeContext": "Normalization, keys, indexes and transactions."
   },
@@ -1151,7 +1159,8 @@
    "status": "unlocked",
    "requires": [
     "sql",
-    "gcp"
+    "gcp",
+    "data"
    ],
    "resumeContext": "Serverless analytics warehouse."
   },
@@ -1206,7 +1215,8 @@
    "type": "framework",
    "status": "unlocked",
    "requires": [
-    "py"
+    "py",
+    "data"
    ],
    "resumeContext": "Dataframes and numeric computing."
   },
@@ -1217,7 +1227,8 @@
    "type": "tool",
    "status": "unlocked",
    "requires": [
-    "py"
+    "py",
+    "data"
    ],
    "resumeContext": "Exploratory analysis and reporting."
   },
@@ -1239,7 +1250,8 @@
    "type": "framework",
    "status": "locked",
    "requires": [
-    "py"
+    "py",
+    "data"
    ],
    "resumeContext": "Distributed data processing."
   },
@@ -1251,7 +1263,8 @@
    "status": "locked",
    "requires": [
     "py",
-    "gcp"
+    "gcp",
+    "data"
    ],
    "resumeContext": "Unified batch and streaming pipelines."
   },
@@ -1262,7 +1275,8 @@
    "type": "tool",
    "status": "locked",
    "requires": [
-    "py"
+    "py",
+    "data"
    ],
    "resumeContext": "Workflow orchestration."
   },
@@ -1376,7 +1390,8 @@
    "type": "concept",
    "status": "learning",
    "requires": [
-    "py"
+    "py",
+    "ai"
    ],
    "resumeContext": "Supervised/unsupervised learning and validation."
   },
@@ -1387,7 +1402,8 @@
    "type": "concept",
    "status": "learning",
    "requires": [
-    "pandas"
+    "pandas",
+    "ai"
    ],
    "resumeContext": "Distributions, testing and inference."
   },
@@ -1488,7 +1504,8 @@
    "type": "tool",
    "status": "unlocked",
    "requires": [
-    "kotlin"
+    "kotlin",
+    "mobile"
    ],
    "resumeContext": "Native Android apps and SDK tooling."
   },
@@ -1510,7 +1527,8 @@
    "type": "framework",
    "status": "unlocked",
    "requires": [
-    "dart"
+    "dart",
+    "mobile"
    ],
    "resumeContext": "Cross-platform UI from one codebase."
   },
@@ -1532,7 +1550,8 @@
    "type": "tool",
    "status": "learning",
    "requires": [
-    "swift"
+    "swift",
+    "mobile"
    ],
    "resumeContext": "Native Apple apps."
   },
@@ -1543,7 +1562,8 @@
    "type": "framework",
    "status": "locked",
    "requires": [
-    "react"
+    "react",
+    "mobile"
    ],
    "resumeContext": "React for native mobile."
   },
@@ -1554,7 +1574,8 @@
    "type": "framework",
    "status": "locked",
    "requires": [
-    "angular"
+    "angular",
+    "mobile"
    ],
    "resumeContext": "Wrap web apps as native apps."
   },
@@ -1565,7 +1586,8 @@
    "type": "framework",
    "status": "locked",
    "requires": [
-    "kotlin"
+    "kotlin",
+    "mobile"
    ],
    "resumeContext": "Share logic across platforms."
   },
@@ -1576,7 +1598,8 @@
    "type": "tool",
    "status": "learning",
    "requires": [
-    "firebase"
+    "firebase",
+    "mobile"
    ],
    "resumeContext": "Cross-platform push notifications."
   },
@@ -1655,7 +1678,8 @@
    "type": "tool",
    "status": "unlocked",
    "requires": [
-    "gcp"
+    "gcp",
+    "sec"
    ],
    "resumeContext": "Never ship credentials; rotate and vault them."
   },
@@ -1678,7 +1702,8 @@
    "type": "concept",
    "status": "learning",
    "requires": [
-    "rest"
+    "rest",
+    "sec"
    ],
    "resumeContext": "The classic web vulnerability catalog."
   },
