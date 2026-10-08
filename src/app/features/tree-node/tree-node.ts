@@ -34,6 +34,9 @@ export class TreeNodeComponent {
   }
 
   onClick() {
+    // 1. Always center the camera on the clicked orb first
+    this.skillService.focusNode(this.node.id, window.innerWidth, 1.2);
+
     if (this.node.status === 'locked') {
       this.playTone(150, 'sawtooth', 0.1); // Error buzz
       return;
