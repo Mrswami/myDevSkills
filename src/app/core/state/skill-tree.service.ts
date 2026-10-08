@@ -428,7 +428,6 @@ export class SkillTreeService {
     const n = this.nodeMap().get(id);
     if (!n) return;
     
-    // Temporarily set selection to get the subset, or just calculate it directly
     const out = new Set<string>();
     const walk = (currId: string) => {
       if (out.has(currId)) return;
@@ -438,32 +437,31 @@ export class SkillTreeService {
     walk(id);
     
     const subsetNodes = this.baseNodes().filter(x => out.has(x.id));
+    const hasChildren = subsetNodes.length > 1;
     
-    if (subsetNodes.length > 1) {
-      // Fit the subset
+    let z = targetZoom ?? 1.1;
+    
+    if (!targetZoom && hasChildren) {
+      // Find max lateral width of subset to ensure it fits horizontally
       const minX = Math.min(...subsetNodes.map(x => x.x));
       const maxX = Math.max(...subsetNodes.map(x => x.x));
-      const minY = Math.min(...subsetNodes.map(x => x.y));
-      const maxY = Math.max(...subsetNodes.map(x => x.y));
-      
-      const padX = width > 800 ? 300 : 120;
-      const padY = 150;
+      const padX = width > 800 ? 300 : 100;
       const w = Math.max(maxX - minX + padX * 2, 600);
-      const h = Math.max(maxY - minY + padY * 2, 400);
-      const z = Math.max(this.minZoom, Math.min(this.maxZoom, Math.min(width / w, window.innerHeight / h)));
-      
-      const targetPan = { 
-        x: -((minX + maxX) / 2) * z + (width > 800 ? -200 : 0), 
-        y: -((minY + maxY) / 2) * z 
-      };
-      
-      this.animateCamera(targetPan, z, 500);
-    } else {
-      // Single node, tight zoom
-      const z = targetZoom ?? 1.1;
-      const offset = width > 800 ? -200 : 0;
-      this.animateCamera({ x: -n.x * z + offset, y: -n.y * z }, z);
+      z = Math.max(this.minZoom, Math.min(this.maxZoom, Math.min(1.0, width / w)));
     }
+    
+    // Position node at the center laterally
+    const offsetX = width > 800 ? -200 : 0;
+    // If it has a subset, position it 25% higher on the screen so the children fit beautifully below it.
+    // If it's a single node, center it perfectly.
+    const offsetY = hasChildren && !targetZoom ? -(window.innerHeight * 0.25) : 0;
+    
+    const targetPan = { 
+      x: -n.x * z + offsetX, 
+      y: -n.y * z + offsetY 
+    };
+    
+    this.animateCamera(targetPan, z, 400); // slightly faster snappier animation
   }
 
   // ───────── Storage (safe in SSR / private mode)

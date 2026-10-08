@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, AfterViewInit, OnDestroy, ChangeDetectionStrategy, inject, effect } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewInit, OnDestroy, ChangeDetectionStrategy, inject, effect, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { SkillTreeService, SkillData, SkillNode, ViewMode } from '../../core/state/skill-tree.service';
 import { TreeNodeComponent } from '../tree-node/tree-node';
@@ -26,6 +26,7 @@ import { trigger, transition, style, animate } from '@angular/animations';
 export class SkillTreeContainerComponent implements AfterViewInit, OnDestroy {
   public skillService = inject(SkillTreeService);
   private http = inject(HttpClient);
+  private zone = inject(NgZone);
 
   @ViewChild('mapContainer', { static: true }) mapContainer!: ElementRef<HTMLDivElement>;
 
@@ -37,9 +38,9 @@ export class SkillTreeContainerComponent implements AfterViewInit, OnDestroy {
   constructor() {
     this.http.get<SkillData>('skills.json').subscribe(data => {
       this.skillService.loadData(data);
-      // Wait for the view to measure, then zoom to macro level on the center hub
+      // Wait for the view to measure, then zoom to legible level on the center hub
       requestAnimationFrame(() => {
-        this.skillService.focusNode('me', window.innerWidth, 0.45);
+        this.skillService.focusNode('me', window.innerWidth, 0.85);
       });
     });
 
@@ -60,45 +61,47 @@ export class SkillTreeContainerComponent implements AfterViewInit, OnDestroy {
       this.cleanup.push(() => el.removeEventListener(type, fn as EventListener));
     };
 
-    on('pointerdown', e => {
-      this.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
-      this.moved = false;
-      if (this.pointers.size === 2) this.lastPinch = this.pinchDistance();
-    });
+    this.zone.runOutsideAngular(() => {
+      on('pointerdown', e => {
+        this.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        this.moved = false;
+        if (this.pointers.size === 2) this.lastPinch = this.pinchDistance();
+      });
 
-    on('pointermove', e => {
-      const prev = this.pointers.get(e.pointerId);
-      if (!prev) return;
-      const cur = { x: e.clientX, y: e.clientY };
-      this.pointers.set(e.pointerId, cur);
+      on('pointermove', e => {
+        const prev = this.pointers.get(e.pointerId);
+        if (!prev) return;
+        const cur = { x: e.clientX, y: e.clientY };
+        this.pointers.set(e.pointerId, cur);
 
-      if (this.pointers.size === 1) {
-        const dx = cur.x - prev.x, dy = cur.y - prev.y;
-        if (!this.moved && Math.abs(dx) + Math.abs(dy) < 2) return;
-        this.moved = true;
-        const p = this.skillService.pan();
-        this.skillService.setPan(p.x + dx, p.y + dy);
-      } else if (this.pointers.size === 2) {
-        const dist = this.pinchDistance();
-        if (this.lastPinch > 0) {
-          const mid = this.pinchMidpoint();
-          this.skillService.zoomAt(this.skillService.zoom() * (dist / this.lastPinch), mid.x, mid.y);
+        if (this.pointers.size === 1) {
+          const dx = cur.x - prev.x, dy = cur.y - prev.y;
+          if (!this.moved && Math.abs(dx) + Math.abs(dy) < 2) return;
+          this.moved = true;
+          const p = this.skillService.pan();
+          this.skillService.setPan(p.x + dx, p.y + dy);
+        } else if (this.pointers.size === 2) {
+          const dist = this.pinchDistance();
+          if (this.lastPinch > 0) {
+            const mid = this.pinchMidpoint();
+            this.skillService.zoomAt(this.skillService.zoom() * (dist / this.lastPinch), mid.x, mid.y);
+          }
+          this.lastPinch = dist;
         }
-        this.lastPinch = dist;
-      }
+      });
+
+      const end = (e: PointerEvent) => { this.pointers.delete(e.pointerId); this.lastPinch = 0; };
+      on('pointerup', end);
+      on('pointercancel', end);
+      on('pointerleave', end);
+
+      on('wheel', e => {
+        e.preventDefault();
+        const c = this.center();
+        const factor = Math.exp(-e.deltaY * 0.0015);
+        this.skillService.zoomAt(this.skillService.zoom() * factor, e.clientX - c.x, e.clientY - c.y);
+      }, { passive: false });
     });
-
-    const end = (e: PointerEvent) => { this.pointers.delete(e.pointerId); this.lastPinch = 0; };
-    on('pointerup', end);
-    on('pointercancel', end);
-    on('pointerleave', end);
-
-    on('wheel', e => {
-      e.preventDefault();
-      const c = this.center();
-      const factor = Math.exp(-e.deltaY * 0.0015);
-      this.skillService.zoomAt(this.skillService.zoom() * factor, e.clientX - c.x, e.clientY - c.y);
-    }, { passive: false });
 
     on('click', e => {
       // Clicking empty space dismisses the sidebar (not after a drag).
