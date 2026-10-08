@@ -37,8 +37,10 @@ export class SkillTreeContainerComponent implements AfterViewInit, OnDestroy {
   constructor() {
     this.http.get<SkillData>('skills.json').subscribe(data => {
       this.skillService.loadData(data);
-      // Wait for the view to measure before framing the whole map.
-      requestAnimationFrame(() => this.fit());
+      // Wait for the view to measure, then zoom to macro level on the center hub
+      requestAnimationFrame(() => {
+        this.skillService.focusNode('me', window.innerWidth, 0.45);
+      });
     });
 
     // Pan to a node when a search narrows to a single skill.
@@ -46,7 +48,7 @@ export class SkillTreeContainerComponent implements AfterViewInit, OnDestroy {
       const q = this.skillService.search().trim();
       const vis = this.skillService.visibleIds();
       if (q && vis && vis.size === 1) {
-        this.skillService.focusNode([...vis][0], window.innerWidth);
+        this.skillService.focusNode([...vis][0], window.innerWidth, 1.2);
       }
     });
   }
@@ -124,7 +126,7 @@ export class SkillTreeContainerComponent implements AfterViewInit, OnDestroy {
 
   fit() {
     const r = this.mapContainer.nativeElement.getBoundingClientRect();
-    this.skillService.fitView(r.width, r.height);
+    this.skillService.fitView(r.width, r.height, true);
   }
 
   zoomBy(factor: number) {

@@ -350,36 +350,70 @@ export class SkillTreeService {
   }
 
   // ───────── Camera
-  public setPan(x: number, y: number) { this.panSignal.set({ x, y }); }
-  public setZoom(z: number) { this.zoomSignal.set(Math.max(this.minZoom, Math.min(this.maxZoom, z))); }
+  private cameraAnimation: number | null = null;
+
+  public setPan(x: number, y: number) { 
+    if (this.cameraAnimation) cancelAnimationFrame(this.cameraAnimation);
+    this.panSignal.set({ x, y }); 
+  }
+  
+  public setZoom(z: number) { 
+    if (this.cameraAnimation) cancelAnimationFrame(this.cameraAnimation);
+    this.zoomSignal.set(Math.max(this.minZoom, Math.min(this.maxZoom, z))); 
+  }
+
+  public animateCamera(targetPan: { x: number, y: number }, targetZoom: number, duration = 400) {
+    if (this.cameraAnimation) cancelAnimationFrame(this.cameraAnimation);
+    
+    const startPan = this.panSignal();
+    const startZoom = this.zoomSignal();
+    const startTime = performance.now();
+
+    const step = (now: number) => {
+      const t = Math.min((now - startTime) / duration, 1);
+      const ease = 1 - Math.pow(1 - t, 3); // cubic ease-out
+      
+      this.panSignal.set({
+        x: startPan.x + (targetPan.x - startPan.x) * ease,
+        y: startPan.y + (targetPan.y - startPan.y) * ease
+      });
+      this.zoomSignal.set(startZoom + (targetZoom - startZoom) * ease);
+      
+      if (t < 1) this.cameraAnimation = requestAnimationFrame(step);
+    };
+    this.cameraAnimation = requestAnimationFrame(step);
+  }
 
   /** Zoom keeping the screen point (relative to viewport center) fixed. */
   public zoomAt(newZoom: number, px: number, py: number) {
     const z0 = this.zoomSignal();
     const z1 = Math.max(this.minZoom, Math.min(this.maxZoom, newZoom));
     const p = this.panSignal();
-    this.panSignal.set({ x: px - (px - p.x) * (z1 / z0), y: py - (py - p.y) * (z1 / z0) });
-    this.zoomSignal.set(z1);
+    this.setPan(px - (px - p.x) * (z1 / z0), py - (py - p.y) * (z1 / z0));
+    this.setZoom(z1);
   }
 
-  public fitView(width: number, height: number) {
+  public fitView(width: number, height: number, animated = false) {
     const b = this.bounds();
     const pad = 140;
     const w = b.maxX - b.minX + pad * 2;
     const h = b.maxY - b.minY + pad * 2;
     const z = Math.max(this.minZoom, Math.min(1, Math.min(width / w, height / h)));
-    this.zoomSignal.set(z);
-    this.panSignal.set({ x: -((b.minX + b.maxX) / 2) * z, y: -((b.minY + b.maxY) / 2) * z });
+    const targetPan = { x: -((b.minX + b.maxX) / 2) * z, y: -((b.minY + b.maxY) / 2) * z };
+    
+    if (animated) {
+      this.animateCamera(targetPan, z, 500);
+    } else {
+      this.setZoom(z);
+      this.setPan(targetPan.x, targetPan.y);
+    }
   }
 
-  public focusNode(id: string, width: number) {
+  public focusNode(id: string, width: number, targetZoom = 1.2) {
     const n = this.nodeMap().get(id);
     if (!n) return;
-    const z = Math.max(this.zoomSignal(), 0.8);
-    this.zoomSignal.set(z);
-    // On narrow screens the sidebar covers the screen, so don't offset.
     const offset = width > 800 ? -200 : 0;
-    this.panSignal.set({ x: -n.x * z + offset, y: -n.y * z });
+    this.animateCamera({ x: -n.x * targetZoom + offset, y: -n.y * targetZoom }, targetZoom);
   }
 
   // ───────── Storage (safe in SSR / private mode)
