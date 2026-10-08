@@ -377,7 +377,11 @@ export class SkillTreeService {
     this.zoomSignal.set(Math.max(this.minZoom, Math.min(this.maxZoom, z))); 
   }
 
-  public animateCamera(targetPan: { x: number, y: number }, targetZoom: number, duration = 400) {
+  private easeInOutCubic(t: number): number {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+
+  public animateCamera(targetPan: { x: number, y: number }, targetZoom: number, duration = 800) {
     if (this.cameraAnimation) cancelAnimationFrame(this.cameraAnimation);
     
     const startPan = this.panSignal();
@@ -386,7 +390,7 @@ export class SkillTreeService {
 
     const step = (now: number) => {
       const t = Math.min((now - startTime) / duration, 1);
-      const ease = 1 - Math.pow(1 - t, 3); // cubic ease-out
+      const ease = this.easeInOutCubic(t);
       
       this.panSignal.set({
         x: startPan.x + (targetPan.x - startPan.x) * ease,
@@ -424,7 +428,7 @@ export class SkillTreeService {
     }
   }
 
-  public focusNode(id: string, width: number, targetZoom?: number) {
+  public focusNode(id: string, width: number, targetZoom?: number, duration = 800) {
     const n = this.nodeMap().get(id);
     if (!n) return;
     
@@ -452,7 +456,7 @@ export class SkillTreeService {
       y: -n.y * z + offsetY 
     };
     
-    this.animateCamera(targetPan, z, 400); // slightly faster snappier animation
+    this.animateCamera(targetPan, z, duration);
   }
 
   // ───────── Storage (safe in SSR / private mode)

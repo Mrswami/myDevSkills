@@ -24,8 +24,9 @@
   transform-origin: 0 0;
   will-change: transform;
 
-  // Level of detail: when zoomed way out, only domain labels stay readable.
-  &.far ::ng-deep .label:not([data-type='domain']) { opacity: 0; }
+  // Level of detail: when zoomed way out, hide fine text and details to improve rendering performance and look.
+  &.far ::ng-deep app-tree-node:not([data-type='domain']) .title,
+  &.far ::ng-deep app-tree-node:not([data-type='domain']) .bg-grid { opacity: 0; }
 }
 
 .connections {
