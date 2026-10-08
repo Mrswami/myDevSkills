@@ -6,7 +6,7 @@
   display: block;
   transition: opacity 0.3s ease;
 
-  &.dimmed { opacity: 0.12; pointer-events: none; }
+  &.dimmed { opacity: 0.25; }
 }
 
 .card {

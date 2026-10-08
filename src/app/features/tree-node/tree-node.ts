@@ -35,22 +35,14 @@ export class TreeNodeComponent {
   }
 
   onClick() {
-    // 1. Always center the camera on the clicked orb first
-    this.skillService.focusNode(this.node.id, window.innerWidth, 1.2);
+    // Select the node so the sidebar opens and dimming logic kicks in
+    this.skillService.selectNode(this.node.id);
+    this.skillService.focusNode(this.node.id, window.innerWidth);
 
     if (this.node.status === 'locked') {
       this.playTone(150, 'sawtooth', 0.1); // Error buzz
-      return;
-    }
-    
-    if (this.node.status !== 'unlocked' && this.node.status !== 'mastered') {
-      this.playTone(600, 'sine', 0.1); // Initial click blip
-      this.skillService.completeInPlan(this.node.id).then(() => {
-        this.playTone(880, 'sine', 0.2); // Success ping
-        this.playTone(1760, 'sine', 0.3, 0.1); // Sparkle
-      });
     } else {
-      this.skillService.selectNode(this.node.id);
+      this.playTone(600, 'sine', 0.1); // Standard blip
     }
   }
 
