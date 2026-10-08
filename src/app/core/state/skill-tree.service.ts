@@ -439,22 +439,13 @@ export class SkillTreeService {
     const subsetNodes = this.baseNodes().filter(x => out.has(x.id));
     const hasChildren = subsetNodes.length > 1;
     
-    let z = targetZoom ?? 1.1;
-    
-    if (!targetZoom && hasChildren) {
-      // Find max lateral width of subset to ensure it fits horizontally
-      const minX = Math.min(...subsetNodes.map(x => x.x));
-      const maxX = Math.max(...subsetNodes.map(x => x.x));
-      const padX = width > 800 ? 300 : 100;
-      const w = Math.max(maxX - minX + padX * 2, 600);
-      z = Math.max(this.minZoom, Math.min(this.maxZoom, Math.min(1.0, width / w)));
-    }
+    // Lock the zoom to a highly legible level so clicking root nodes doesn't zoom out entirely
+    const z = targetZoom ?? 0.95;
     
     // Position node at the center laterally
     const offsetX = width > 800 ? -200 : 0;
     // If it has a subset, position it 25% higher on the screen so the children fit beautifully below it.
-    // If it's a single node, center it perfectly.
-    const offsetY = hasChildren && !targetZoom ? -(window.innerHeight * 0.25) : 0;
+    const offsetY = (hasChildren && !targetZoom) ? -(window.innerHeight * 0.25) : 0;
     
     const targetPan = { 
       x: -n.x * z + offsetX, 
