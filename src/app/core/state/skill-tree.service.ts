@@ -187,13 +187,13 @@ export class SkillTreeService {
    */
   private layout(data: SkillData): SkillNode[] {
     const COLS = 3;        // max nodes per row (tight for linear feel)
-    const COL_W = 200;     // lateral spacing
-    const ROW_H = 160;     // vertical spacing between rows
-    const START = 180;     // gap from domain node to first row
-    const DOMAIN_W = 1200; // spacing between domain columns
+    const COL_W = 180;     // lateral spacing
+    const ROW_H = 100;     // vertical spacing between rows
+    const START = 120;     // gap from domain node to first row
+    const DOMAIN_W = 600;  // spacing between domain columns
 
     const pos = new Map<string, { x: number; y: number }>();
-    pos.set('me', { x: 0, y: -300 });
+    pos.set('me', { x: 0, y: -200 });
 
     data.domains.forEach((dom, di) => {
       // Flow downwards

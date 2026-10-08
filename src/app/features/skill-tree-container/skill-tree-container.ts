@@ -38,9 +38,20 @@ export class SkillTreeContainerComponent implements AfterViewInit, OnDestroy {
   constructor() {
     this.http.get<SkillData>('skills.json').subscribe(data => {
       this.skillService.loadData(data);
-      // Wait for the view to measure, then zoom to legible level on the center hub
+      // Wait for the view to measure, then trigger cinematic startup animation
       requestAnimationFrame(() => {
-        this.skillService.focusNode('me', window.innerWidth, 0.85);
+        const me = this.skillService.nodeMap().get('me');
+        if (me) {
+          // 1. Instant wide-shot
+          this.skillService.setZoom(0.3);
+          this.skillService.setPan(-me.x * 0.3, -me.y * 0.3);
+          
+          // 2. Swoop in and pop the sidebar
+          setTimeout(() => {
+            this.skillService.focusNode('me', window.innerWidth, 0.95);
+            this.skillService.selectNode('me');
+          }, 500);
+        }
       });
     });
 
