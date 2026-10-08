@@ -1,6 +1,6 @@
 <button
   type="button"
-  class="orb"
+  class="card"
   [attr.data-status]="node.status"
   [attr.data-type]="node.type"
   [attr.aria-label]="node.title + ' (' + node.status + ')'"
@@ -8,7 +8,10 @@
   (click)="onClick()"
   (pointerdown)="$event.stopPropagation()"
 >
-  <span class="ring"></span>
-  <span class="core"><span class="glyph">{{ glyph() }}</span></span>
+  <span class="border-glow"></span>
+  <span class="bg-grid"></span>
+  <div class="content">
+    <span class="glyph">{{ glyph() }}</span>
+    <span class="title">{{ node.title }}</span>
+  </div>
 </button>
-<span class="label" [attr.data-status]="node.status" [attr.data-type]="node.type">{{ node.title }}</span>

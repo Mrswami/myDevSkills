@@ -159,7 +159,14 @@ export class SkillTreeContainerComponent implements AfterViewInit, OnDestroy {
 
   isDimmed(n: SkillNode): boolean {
     const vis = this.skillService.visibleIds();
-    return !!vis && !vis.has(n.id);
+    if (vis && !vis.has(n.id)) return true;
+
+    const sub = this.skillService.activeSubtree();
+    if (sub && !sub.has(n.id) && !this.skillService.selectedPrereqs().some(p => p.id === n.id)) {
+      return true;
+    }
+    
+    return false;
   }
 
   go(n: SkillNode) {

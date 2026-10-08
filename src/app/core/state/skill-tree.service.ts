@@ -88,10 +88,25 @@ export class SkillTreeService {
     const id = this.selectedNodeIdSignal();
     return id ? this.nodeMap().get(id) ?? null : null;
   });
+  
+  public activeSubtree = computed(() => {
+    const s = this.selectedNode();
+    if (!s) return null;
+    const out = new Set<string>();
+    const walk = (id: string) => {
+      if (out.has(id)) return;
+      out.add(id);
+      (this.childrenOf().get(id) ?? []).forEach(walk);
+    };
+    walk(s.id);
+    return out;
+  });
+
   public selectedPrereqs = computed(() => {
     const s = this.selectedNode();
     return s ? s.requires.map(id => this.nodeMap().get(id)).filter((n): n is SkillNode => !!n) : [];
   });
+  
   public selectedUnlocks = computed(() => {
     const s = this.selectedNode();
     return s ? (this.childrenOf().get(s.id) ?? []).map(id => this.nodeMap().get(id)).filter((n): n is SkillNode => !!n) : [];
@@ -409,11 +424,46 @@ export class SkillTreeService {
     }
   }
 
-  public focusNode(id: string, width: number, targetZoom = 1.2) {
+  public focusNode(id: string, width: number, targetZoom?: number) {
     const n = this.nodeMap().get(id);
     if (!n) return;
-    const offset = width > 800 ? -200 : 0;
-    this.animateCamera({ x: -n.x * targetZoom + offset, y: -n.y * targetZoom }, targetZoom);
+    
+    // Temporarily set selection to get the subset, or just calculate it directly
+    const out = new Set<string>();
+    const walk = (currId: string) => {
+      if (out.has(currId)) return;
+      out.add(currId);
+      (this.childrenOf().get(currId) ?? []).forEach(walk);
+    };
+    walk(id);
+    
+    const subsetNodes = this.baseNodes().filter(x => out.has(x.id));
+    
+    if (subsetNodes.length > 1) {
+      // Fit the subset
+      const minX = Math.min(...subsetNodes.map(x => x.x));
+      const maxX = Math.max(...subsetNodes.map(x => x.x));
+      const minY = Math.min(...subsetNodes.map(x => x.y));
+      const maxY = Math.max(...subsetNodes.map(x => x.y));
+      
+      const padX = width > 800 ? 300 : 120;
+      const padY = 150;
+      const w = Math.max(maxX - minX + padX * 2, 600);
+      const h = Math.max(maxY - minY + padY * 2, 400);
+      const z = Math.max(this.minZoom, Math.min(this.maxZoom, Math.min(width / w, window.innerHeight / h)));
+      
+      const targetPan = { 
+        x: -((minX + maxX) / 2) * z + (width > 800 ? -200 : 0), 
+        y: -((minY + maxY) / 2) * z 
+      };
+      
+      this.animateCamera(targetPan, z, 500);
+    } else {
+      // Single node, tight zoom
+      const z = targetZoom ?? 1.1;
+      const offset = width > 800 ? -200 : 0;
+      this.animateCamera({ x: -n.x * z + offset, y: -n.y * z }, z);
+    }
   }
 
   // ───────── Storage (safe in SSR / private mode)
