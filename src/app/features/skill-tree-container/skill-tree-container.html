@@ -92,7 +92,7 @@
         </div>
         <p class="context">{{ selected.resumeContext }}</p>
 
-        @if (skillService.selectedPrereqs().length && selected.type !== 'domain') {
+        @if (skillService.selectedPrereqs().length) {
           <h3>Requires</h3>
           <div class="links">
             @for (p of skillService.selectedPrereqs(); track p.id) {
